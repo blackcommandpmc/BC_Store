@@ -139,9 +139,9 @@
 
     <script>
         // CONFIGURAÇÃO SUPABASE
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const DISCORD_WEBHOOK = 'YOUR_DISCORD_WEBHOOK_URL';
+        const SUPABASE_URL = 'https://pvwogvjmcfqbqulbwpdm.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Fhl1kcLddx4TjiHqJwWvrg_r6nbMq0f';
+        const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1480276662615802033/QpfNdcbcmapSjgbIiayUOtuhqZOfqijMoiGBtkUIP7k-v--YO5kEDByEbRZiXRxzL8M7';
         
         const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let cart = [];
