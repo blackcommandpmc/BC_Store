@@ -8,7 +8,7 @@
     <style>
         :root {
             /* REPLACE IMAGE URL HERE */
-            --bg-image: url('https://images.unsplash.com/photo-1614850523296-d8c1af93d400?q=80&w=2070');
+            --bg-image: url('https://i.postimg.cc/Xq3sBsGY/image.png');
         }
 
         body {
