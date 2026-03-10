@@ -7,147 +7,62 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            /* CHANGE BACKGROUND IMAGE HERE */
             --bg-image: url('https://i.postimg.cc/Xq3sBsGY/image.png');
         }
 
         body {
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
+            margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
             background: var(--bg-image) no-repeat center center fixed;
-            background-size: cover;
-            color: white;
-            /* White text with black shadow for readability */
+            background-size: cover; color: white;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 1);
         }
 
         .hidden { display: none !important; }
 
-        /* AUTH SCREEN */
-        #auth-screen {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.5);
-        }
-
-        .auth-card {
-            background: rgba(0, 0, 0, 0.7);
-            padding: 40px;
-            border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.2);
-            width: 300px;
-            text-align: center;
-        }
+        /* AUTH & MODALS */
+        #auth-screen { height: 100vh; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.6); }
+        .auth-card, .modal { background: rgba(0,0,0,0.9); padding: 30px; border-radius: 12px; border: 1px solid #444; width: 320px; }
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
 
         /* STORE LAYOUT */
-        #store-screen {
-            display: grid;
-            grid-template-columns: 1fr 350px;
-            height: 100vh;
-        }
+        #store-screen { display: grid; grid-template-columns: 1fr 320px; height: 100vh; }
+        .main-content { overflow-y: auto; padding: 20px; }
+        .cart-panel { background: rgba(0,0,0,0.9); border-left: 2px solid #333; padding: 20px; display: flex; flex-direction: column; }
 
-        .main-content {
-            overflow-y: auto;
-            padding: 20px;
+        /* CATEGORIES & PRODUCTS */
+        .category-section { margin-bottom: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 10px; }
+        .category-title { color: #f1c40f; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; }
+        
+        .product-card { 
+            background: rgba(255,255,255,0.05); backdrop-filter: blur(5px); 
+            padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #333;
         }
+        .product-card img { width: 100%; height: 100px; object-fit: cover; border-radius: 4px; }
+        .product-card h4 { margin: 8px 0 2px 0; font-size: 0.9em; }
+        .product-card p { margin: 0 0 8px 0; color: #2ecc71; font-weight: bold; }
 
-        /* CART PANEL (Right Side) */
-        .cart-panel {
-            background: rgba(0, 0, 0, 0.85);
-            border-left: 2px solid rgba(255,255,255,0.1);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-        }
+        /* INPUTS & BUTTONS */
+        input, select, button { width: 100%; padding: 10px; margin: 5px 0; border-radius: 4px; border: 1px solid #444; background: rgba(255,255,255,0.1); color: white; box-sizing: border-box; }
+        button { cursor: pointer; background: #27ae60; border: none; font-weight: bold; }
+        .btn-edit { background: #f39c12; }
+        .btn-del { background: #c0392b; font-size: 0.8em; margin-top: 2px; }
+        .btn-cart-ctrl { width: auto; padding: 2px 8px; display: inline-block; margin: 0 2px; }
 
-        /* MODAL */
-        .modal-overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal {
-            background: #1a1a1a;
-            padding: 25px;
-            border-radius: 10px;
-            width: 350px;
-            border: 1px solid #444;
-        }
-
-        /* ELEMENTS */
-        input, select, button {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 5px;
-            border: 1px solid #444;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            box-sizing: border-box;
-        }
-
-        button {
-            cursor: pointer;
-            background: #27ae60;
-            font-weight: bold;
-            transition: 0.3s;
-            border: none;
-        }
-
-        button:hover { background: #2ecc71; }
-        .btn-reg { background: #2980b9; }
-        .btn-cancel { background: #c0392b; }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .product-card {
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-
-        .product-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px 0;
-            border-bottom: 1px solid #333;
-        }
+        /* CART ITEMS */
+        .cart-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.9em; padding: 8px 0; border-bottom: 1px solid #222; }
     </style>
 </head>
 <body>
 
     <div id="auth-screen">
         <div class="auth-card">
-            <h2>BEM-VINDO</h2>
+            <h2>LOGIN</h2>
             <input type="email" id="login-email" placeholder="E-mail">
             <input type="password" id="login-pass" placeholder="Senha">
-            <button onclick="login()">LOGIN</button>
-            <button class="btn-reg" onclick="toggleModal('reg-modal', true)">REGISTRAR</button>
+            <button onclick="login()">ENTRAR</button>
+            <button style="background:#2980b9" onclick="toggleModal('reg-modal', true)">REGISTRAR</button>
         </div>
     </div>
 
@@ -158,19 +73,20 @@
             <input type="text" id="reg-tel" placeholder="Telefone in-game">
             <input type="email" id="reg-email" placeholder="E-mail">
             <input type="password" id="reg-pass" placeholder="Senha">
-            <button onclick="register()">CRIAR CONTA</button>
-            <button class="btn-cancel" onclick="toggleModal('reg-modal', false)">FECHAR</button>
+            <button onclick="register()">CRIAR</button>
+            <button class="btn-del" onclick="toggleModal('reg-modal', false)">CANCELAR</button>
         </div>
     </div>
 
     <div id="store-screen" class="hidden">
         <div class="main-content">
-            <div id="admin-panel" class="hidden" style="background: rgba(0,0,0,0.6); padding: 20px; border-radius: 10px;">
-                <h3>Painel Administrativo</h3>
+            <div id="admin-panel" class="hidden" style="background: rgba(0,0,0,0.8); padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                <h3 id="admin-title">Adicionar Produto</h3>
+                <input type="hidden" id="edit-id">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <input type="text" id="p-name" placeholder="Nome do Item">
+                    <input type="text" id="p-name" placeholder="Nome">
                     <input type="number" id="p-price" placeholder="Preço">
-                    <input type="text" id="p-img" placeholder="URL da Imagem">
+                    <input type="text" id="p-img" placeholder="Link Imagem">
                     <select id="p-cat">
                         <option>Pistolas</option>
                         <option>Submetralhadoras</option>
@@ -178,188 +94,187 @@
                         <option>Especiais</option>
                     </select>
                 </div>
-                <button onclick="addProduct()">ADICIONAR PRODUTO</button>
+                <button id="admin-action-btn" onclick="saveProduct()">SALVAR PRODUTO</button>
+                <button id="cancel-edit" class="hidden btn-del" onclick="resetAdminForm()">CANCELAR EDIÇÃO</button>
             </div>
 
-            <h1 id="welcome-msg">Loja de Itens</h1>
-            <div id="products-list" class="product-grid"></div>
+            <div id="store-view"></div>
         </div>
 
         <div class="cart-panel">
-            <h2>Seu Carrinho</h2>
-            <div id="cart-items" style="flex-grow: 1; overflow-y: auto;">
-                </div>
-            <div style="padding-top: 20px; border-top: 2px solid white;">
+            <h2>Carrinho</h2>
+            <div id="cart-items" style="flex-grow: 1;"></div>
+            <div style="padding-top: 15px; border-top: 1px solid white;">
                 <h3 id="cart-total">Total: $0</h3>
-                <button onclick="checkout()">FINALIZAR PEDIDO (DISCORD)</button>
-                <button class="btn-cancel" onclick="logout()" style="margin-top: 10px;">SAIR</button>
+                <button onclick="checkout()">FINALIZAR NO DISCORD</button>
+                <button class="btn-del" onclick="logout()" style="margin-top:10px">SAIR</button>
             </div>
         </div>
     </div>
 
     <script>
-        // --- 1. CONFIGURATION (REPLACE THESE) ---
         const SUPABASE_URL = 'https://pvwogvjmcfqbqulbwpdm.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Fhl1kcLddx4TjiHqJwWvrg_r6nbMq0f';
         const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1480276662615802033/QpfNdcbcmapSjgbIiayUOtuhqZOfqijMoiGBtkUIP7k-v--YO5kEDByEbRZiXRxzL8M7';
 
-        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let cart = [];
         let currentUser = null;
+        const categories = ["Pistolas", "Submetralhadoras", "Fuzis", "Especiais"];
 
-        // --- 2. AUTH FUNCTIONS ---
-        function toggleModal(id, show) {
-            document.getElementById(id).classList.toggle('hidden', !show);
-        }
+        function toggleModal(id, show) { document.getElementById(id).classList.toggle('hidden', !show); }
 
         async function register() {
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-pass').value;
-            const metadata = {
-                nome_ingame: document.getElementById('reg-nome').value,
-                tel_ingame: document.getElementById('reg-tel').value,
-                role: 'customer'
-            };
-
-            const { data, error } = await supabaseClient.auth.signUp({
-                email, password, options: { data: metadata }
-            });
-
-            if (error) alert(error.message);
-            else {
-                alert("Cadastro realizado! Você já pode tentar logar.");
-                toggleModal('reg-modal', false);
-            }
+            const metadata = { nome_ingame: document.getElementById('reg-nome').value, tel_ingame: document.getElementById('reg-tel').value, role: 'customer' };
+            const { error } = await supabase.auth.signUp({ email, password, options: { data: metadata } });
+            if (error) alert(error.message); else { alert("Sucesso! Logue agora."); toggleModal('reg-modal', false); }
         }
 
         async function login() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-pass').value;
-
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-            if (error) alert(error.message);
-            else {
-                currentUser = data.user;
-                initStore();
-            }
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) alert(error.message); else { currentUser = data.user; initStore(); }
         }
 
         function initStore() {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('store-screen').classList.remove('hidden');
-            
-            document.getElementById('welcome-msg').innerText = `Bem-vindo, ${currentUser.user_metadata.nome_ingame}`;
-
-            // Check if Admin
-            if (currentUser.user_metadata.role === 'admin') {
-                document.getElementById('admin-panel').classList.remove('hidden');
-            }
+            if (currentUser.user_metadata.role === 'admin') document.getElementById('admin-panel').classList.remove('hidden');
             loadProducts();
         }
 
-        // --- 3. STORE FUNCTIONS ---
         async function loadProducts() {
-            const { data, error } = await supabaseClient.from('products').select('*');
-            const list = document.getElementById('products-list');
-            list.innerHTML = '';
-            
-            if (data) {
-                data.forEach(p => {
-                    list.innerHTML += `
-                        <div class="product-card">
-                            <img src="${p.image_url}" alt="${p.name}">
-                            <h4>${p.name}</h4>
-                            <small>${p.category}</small>
-                            <p>$${p.price}</p>
-                            <button onclick="addToCart('${p.name}', ${p.price})">ADICIONAR</button>
-                            ${currentUser.user_metadata.role === 'admin' ? 
-                                `<button class="btn-cancel" style="margin-top:5px" onclick="deleteProduct('${p.id}')">EXCLUIR</button>` : ''}
-                        </div>
-                    `;
-                });
-            }
+            const { data: products } = await supabase.from('products').select('*');
+            const view = document.getElementById('store-view');
+            view.innerHTML = '';
+
+            categories.forEach(cat => {
+                const catItems = products?.filter(p => p.category === cat) || [];
+                if (catItems.length > 0) {
+                    let section = `<div class="category-section"><h2 class="category-title">${cat}</h2><div class="product-grid">`;
+                    catItems.forEach(p => {
+                        section += `
+                            <div class="product-card">
+                                <img src="${p.image_url}">
+                                <h4>${p.name}</h4>
+                                <p>$${p.price}</p>
+                                <button onclick="addToCart('${p.name}', ${p.price})">COMPRAR</button>
+                                ${currentUser.user_metadata.role === 'admin' ? `
+                                    <button class="btn-edit" onclick="editProduct('${p.id}', '${p.name}', ${p.price}, '${p.image_url}', '${p.category}')">EDITAR</button>
+                                    <button class="btn-del" onclick="deleteProduct('${p.id}')">EXCLUIR</button>
+                                ` : ''}
+                            </div>`;
+                    });
+                    section += `</div></div>`;
+                    view.innerHTML += section;
+                }
+            });
         }
 
-        async function addProduct() {
-            const newItem = {
+        async function saveProduct() {
+            const id = document.getElementById('edit-id').value;
+            const item = {
                 name: document.getElementById('p-name').value,
                 price: parseFloat(document.getElementById('p-price').value),
                 image_url: document.getElementById('p-img').value,
                 category: document.getElementById('p-cat').value
             };
 
-            const { error } = await supabaseClient.from('products').insert([newItem]);
+            let error;
+            if (id) {
+                ({ error } = await supabase.from('products').update(item).eq('id', id));
+            } else {
+                ({ error } = await supabase.from('products').insert([item]));
+            }
+
             if (error) alert(error.message);
-            else loadProducts();
+            else { resetAdminForm(); loadProducts(); }
+        }
+
+        function editProduct(id, name, price, img, cat) {
+            document.getElementById('edit-id').value = id;
+            document.getElementById('p-name').value = name;
+            document.getElementById('p-price').value = price;
+            document.getElementById('p-img').value = img;
+            document.getElementById('p-cat').value = cat;
+            document.getElementById('admin-title').innerText = "Editando Produto";
+            document.getElementById('cancel-edit').classList.remove('hidden');
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+
+        function resetAdminForm() {
+            document.getElementById('edit-id').value = '';
+            document.getElementById('p-name').value = '';
+            document.getElementById('p-price').value = '';
+            document.getElementById('p-img').value = '';
+            document.getElementById('admin-title').innerText = "Adicionar Produto";
+            document.getElementById('cancel-edit').classList.add('hidden');
         }
 
         async function deleteProduct(id) {
-            await supabaseClient.from('products').delete().eq('id', id);
-            loadProducts();
-        }
-
-        // --- 4. CART & CHECKOUT ---
-        function addToCart(name, price) {
-            const existing = cart.find(item => item.name === name);
-            if (existing) {
-                existing.qty++;
-            } else {
-                cart.push({ name, price, qty: 1 });
+            if(confirm("Deseja excluir este item?")) {
+                await supabase.from('products').delete().eq('id', id);
+                loadProducts();
             }
-            updateUI();
         }
 
-        function updateUI() {
+        function addToCart(name, price) {
+            const item = cart.find(i => i.name === name);
+            if (item) item.qty++; else cart.push({ name, price, qty: 1 });
+            updateCart();
+        }
+
+        function removeFromCart(name, all = false) {
+            const index = cart.findIndex(i => i.name === name);
+            if (index !== -1) {
+                if (all || cart[index].qty <= 1) cart.splice(index, 1);
+                else cart[index].qty--;
+            }
+            updateCart();
+        }
+
+        function updateCart() {
             const container = document.getElementById('cart-items');
             container.innerHTML = '';
             let total = 0;
-
-            cart.forEach(item => {
-                total += item.price * item.qty;
+            cart.forEach(i => {
+                total += i.price * i.qty;
                 container.innerHTML += `
                     <div class="cart-item">
-                        <span>${item.qty}x ${item.name}</span>
-                        <span>$${item.price * item.qty}</span>
-                    </div>
-                `;
+                        <span>${i.qty}x ${i.name}</span>
+                        <div>
+                            <button class="btn-cart-ctrl" onclick="removeFromCart('${i.name}')">-</button>
+                            <button class="btn-cart-ctrl btn-del" onclick="removeFromCart('${i.name}', true)">x</button>
+                        </div>
+                    </div>`;
             });
             document.getElementById('cart-total').innerText = `Total: $${total}`;
         }
 
         async function checkout() {
-            if (cart.length === 0) return alert("Carrinho está vazio!");
-
-            const orderList = cart.map(i => `• ${i.qty}x ${i.name} ($${i.price * i.qty})`).join('\n');
+            if (cart.length === 0) return alert("Vazio!");
+            const list = cart.map(i => `• ${i.qty}x ${i.name} ($${i.price * i.qty})`).join('\n');
             const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-
-            const discordPayload = {
-                username: "Store Bot",
-                embeds: [{
-                    title: "🛒 NOVO PEDIDO",
-                    color: 3066993,
-                    fields: [
-                        { name: "Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
-                        { name: "Telefone", value: currentUser.user_metadata.tel_ingame, inline: true },
-                        { name: "Itens", value: orderList },
-                        { name: "Total Geral", value: `$${total}` }
-                    ],
-                    timestamp: new Date()
-                }]
-            };
-
-            try {
-                await fetch(DISCORD_WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(discordPayload)
-                });
-                alert("Pedido enviado com sucesso para o Discord!");
-                cart = [];
-                updateUI();
-            } catch (err) {
-                alert("Erro ao enviar para o Discord.");
-            }
+            
+            await fetch(DISCORD_WEBHOOK, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "🛒 NOVO PEDIDO", color: 3066993,
+                        fields: [
+                            { name: "Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
+                            { name: "Itens", value: list },
+                            { name: "Total", value: `$${total}` }
+                        ]
+                    }]
+                })
+            });
+            alert("Pedido Enviado!"); cart = []; updateCart();
         }
 
         function logout() { location.reload(); }
