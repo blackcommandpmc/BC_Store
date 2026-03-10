@@ -39,13 +39,10 @@
         .auth-card, .modal { background: rgba(0,0,0,0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--gold); width: 320px; text-align: center; }
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
 
-        /* DROPDOWN COLOR FIX */
         select option { color: black; background: white; }
 
-        /* STORE LAYOUT */
         #store-screen { width: 100%; max-width: 1000px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
         
-        /* ADMIN TOP BUTTON */
         #admin-top-bar { position: fixed; top: 15px; right: 20px; z-index: 800; }
         .btn-admin-add { background: var(--gold); color: black; width: auto; padding: 8px 15px; border-radius: 50px; box-shadow: 0 0 10px rgba(212,175,55,0.5); }
 
@@ -60,43 +57,26 @@
         }
 
         .product-grid { 
-    display: grid; 
-    /* This forces exactly 3 columns on larger screens, and scales down on mobile */
-    grid-template-columns: repeat(3, 1fr); 
-    gap: 20px; 
-    justify-items: center;
-    width: 100%;
-}
-
-/* Responsive adjustment for small phones */
-@media (max-width: 600px) {
-    .product-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-.product-card { 
-    background: rgba(255,255,255,0.08); 
-    padding: 12px; 
-    border-radius: 8px; 
-    text-align: center; 
-    border: 1px solid rgba(255,255,255,0.1); 
-    width: 100%; 
-    /* Ensures cards don't get too giant on wide screens */
-    max-width: 280px; 
-    box-sizing: border-box;
-}
-
-.product-card img { 
-    width: 100%; 
-    height: 140px; /* Slightly taller images for the wider columns */
-    object-fit: cover; 
-    border-radius: 4px; 
-}
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 20px; 
+            justify-items: center;
+            width: 100%;
         }
-        .product-card img { width: 100%; height: 80px; object-fit: cover; border-radius: 4px; }
-        .product-card h4 { margin: 8px 0 4px 0; font-size: 0.8em; }
-        .product-card p { margin: 0 0 8px 0; color: #2ecc71; font-weight: bold; font-size: 0.85em; }
+
+        @media (max-width: 600px) {
+            .product-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .product-card { 
+            background: rgba(255,255,255,0.08); 
+            padding: 12px; border-radius: 8px; text-align: center; 
+            border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 280px; box-sizing: border-box;
+        }
+
+        .product-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 4px; }
+        .product-card h4 { margin: 8px 0 4px 0; font-size: 0.9em; }
+        .product-card p { margin: 0 0 8px 0; color: #2ecc71; font-weight: bold; font-size: 1em; }
 
         .cart-panel { 
             background: rgba(0,0,0,0.95); border-top: 2px solid var(--gold); 
@@ -115,27 +95,27 @@
     <div id="loader" class="hidden"><div class="spinner"></div><p>Processando...</p></div>
 
     <div id="auth-screen">
-    <div class="auth-card">
-        <h2 style="color:var(--gold)">BEM-VINDO</h2>
-        <input type="email" id="login-email" placeholder="E-mail">
-        <input type="password" id="login-pass" placeholder="Senha" onkeypress="if(event.key==='Enter') login()">
-        <button onclick="login()">ENTRAR</button>
-        <button style="background:#2980b9" onclick="toggleModal('reg-modal', true)">CRIAR CONTA</button>
+        <div class="auth-card">
+            <h2 style="color:var(--gold)">BEM-VINDO</h2>
+            <input type="email" id="login-email" placeholder="E-mail">
+            <input type="password" id="login-pass" placeholder="Senha" onkeypress="if(event.key==='Enter') login()">
+            <button onclick="login()">ENTRAR</button>
+            <button style="background:#2980b9" onclick="toggleModal('reg-modal', true)">CRIAR CONTA</button>
+        </div>
     </div>
-</div>
 
-<div id="reg-modal" class="modal-overlay hidden">
-    <div class="modal">
-        <h3 style="color:var(--gold)">Cadastro</h3>
-        <input type="text" id="reg-bot-check" style="display:none" tabindex="-1" autocomplete="off">
-        <input type="text" id="reg-nome" placeholder="Nome in-game">
-        <input type="text" id="reg-tel" placeholder="Telefone in-game">
-        <input type="email" id="reg-email" placeholder="E-mail">
-        <input type="password" id="reg-pass" placeholder="Senha">
-        <button id="btn-finalizar-reg" onclick="register()">FINALIZAR</button>
-        <button class="btn-del" onclick="toggleModal('reg-modal', false)">CANCELAR</button>
+    <div id="reg-modal" class="modal-overlay hidden">
+        <div class="modal">
+            <h3 style="color:var(--gold)">Cadastro</h3>
+            <input type="text" id="reg-bot-check" style="display:none" tabindex="-1" autocomplete="off">
+            <input type="text" id="reg-nome" placeholder="Nome in-game">
+            <input type="text" id="reg-tel" placeholder="Telefone in-game">
+            <input type="email" id="reg-email" placeholder="E-mail">
+            <input type="password" id="reg-pass" placeholder="Senha">
+            <button id="btn-finalizar-reg" onclick="register()">FINALIZAR</button>
+            <button class="btn-del" onclick="toggleModal('reg-modal', false)">CANCELAR</button>
+        </div>
     </div>
-</div>
 
     <div id="admin-modal" class="modal-overlay hidden">
         <div class="modal" style="width: 400px;">
@@ -191,34 +171,44 @@
         let isRegistering = false;
         const categories = ["Pistolas", "Submetralhadoras", "Fuzis", "Especiais"];
 
-        // 4. FUNCTIONS (showLoading, toggleModal, login, etc. follow here...)
         function showLoading(show) { 
-        const loader = document.getElementById('loader');
-        if(loader) loader.classList.toggle('hidden', !show); 
-    }
+            const loader = document.getElementById('loader');
+            if(loader) loader.classList.toggle('hidden', !show); 
+        }
 
-    function toggleModal(id, show) { 
-        const el = document.getElementById(id);
-        if(el) el.classList.toggle('hidden', !show); 
-    }
+        function toggleModal(id, show) { 
+            const el = document.getElementById(id);
+            if(el) el.classList.toggle('hidden', !show); 
+        }
+
         function toggleCart() { document.getElementById('cart-items-box').classList.toggle('hidden'); }
 
-       async function register() {
-        // If the hidden field is filled, it's a bot
-        if (document.getElementById('reg-bot-check').value !== "") {
-        console.log("Bot detected.");
-        return; // Exit silently
-        }
-           {
+        async function register() {
+            // Honeypot check
+            if (document.getElementById('reg-bot-check').value !== "") {
+                console.log("Bot detected.");
+                return;
+            }
+
             showLoading(true);
-            const metadata = { nome_ingame: document.getElementById('reg-nome').value, tel_ingame: document.getElementById('reg-tel').value, role: 'customer' };
+            const metadata = { 
+                nome_ingame: document.getElementById('reg-nome').value, 
+                tel_ingame: document.getElementById('reg-tel').value, 
+                role: 'customer' 
+            };
+            
             const { error } = await supabaseClient.auth.signUp({ 
                 email: document.getElementById('reg-email').value, 
                 password: document.getElementById('reg-pass').value, 
                 options: { data: metadata } 
             });
+
             showLoading(false);
-            if (error) alert(error.message); else { alert("Sucesso! Faça Login."); toggleModal('reg-modal', false); }
+            if (error) alert(error.message); 
+            else { 
+                alert("Sucesso! Faça Login."); 
+                toggleModal('reg-modal', false); 
+            }
         }
 
         async function login() {
@@ -318,7 +308,7 @@
         function removeFromCart(name, all = false) {
             const idx = cart.findIndex(i => i.name === name);
             if (idx !== -1) {
-                if (all || cart[idx].qty <= 1) cart.splice(idx, 1);
+                if (all || cart[idx].qty <= 1) cart.splice(index, 1);
                 else cart[idx].qty--;
             }
             updateCart();
