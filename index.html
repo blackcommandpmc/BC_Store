@@ -115,27 +115,27 @@
     <div id="loader" class="hidden"><div class="spinner"></div><p>Processando...</p></div>
 
     <div id="auth-screen">
-        <div class="auth-card">
-            <h2 style="color:var(--gold)">BEM-VINDO</h2>
-            <input type="email" id="login-email" placeholder="E-mail">
-            <input type="password" id="login-pass" placeholder="Senha" onkeypress="if(event.key==='Enter') login()">
-            <button onclick="login()">ENTRAR</button>
-            <button style="background:#2980b9" onclick="toggleModal('reg-modal', true)">CRIAR CONTA</button>
-        </div>
+    <div class="auth-card">
+        <h2 style="color:var(--gold)">BEM-VINDO</h2>
+        <input type="email" id="login-email" placeholder="E-mail">
+        <input type="password" id="login-pass" placeholder="Senha" onkeypress="if(event.key==='Enter') login()">
+        <button onclick="login()">ENTRAR</button>
+        <button style="background:#2980b9" onclick="toggleModal('reg-modal', true)">CRIAR CONTA</button>
     </div>
+</div>
 
-    <div id="reg-modal" class="modal-overlay hidden">
-        <div class="modal">
-            <h3 style="color:var(--gold)">Cadastro</h3>
-            <input type="text" id="reg-nome" placeholder="Nome in-game">
-            <input type="text" id="reg-tel" placeholder="Telefone in-game">
-            <input type="email" id="reg-email" placeholder="E-mail">
-            <input type="password" id="reg-pass" placeholder="Senha">
-            <input type="text" id="reg-bot-check" style="display:none" tabindex="-1" autocomplete="off">
-            <button onclick="register()">FINALIZAR</button>
-            <button class="btn-del" onclick="toggleModal('reg-modal', false)">CANCELAR</button>
-        </div>
+<div id="reg-modal" class="modal-overlay hidden">
+    <div class="modal">
+        <h3 style="color:var(--gold)">Cadastro</h3>
+        <input type="text" id="reg-bot-check" style="display:none" tabindex="-1" autocomplete="off">
+        <input type="text" id="reg-nome" placeholder="Nome in-game">
+        <input type="text" id="reg-tel" placeholder="Telefone in-game">
+        <input type="email" id="reg-email" placeholder="E-mail">
+        <input type="password" id="reg-pass" placeholder="Senha">
+        <button id="btn-finalizar-reg" onclick="register()">FINALIZAR</button>
+        <button class="btn-del" onclick="toggleModal('reg-modal', false)">CANCELAR</button>
     </div>
+</div>
 
     <div id="admin-modal" class="modal-overlay hidden">
         <div class="modal" style="width: 400px;">
@@ -188,10 +188,19 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let cart = [];
         let currentUser = null;
+        let isRegistering = false;
         const categories = ["Pistolas", "Submetralhadoras", "Fuzis", "Especiais"];
 
-        function showLoading(show) { document.getElementById('loader').classList.toggle('hidden', !show); }
-        function toggleModal(id, show) { document.getElementById(id).classList.toggle('hidden', !show); }
+        // 4. FUNCTIONS (showLoading, toggleModal, login, etc. follow here...)
+        function showLoading(show) { 
+        const loader = document.getElementById('loader');
+        if(loader) loader.classList.toggle('hidden', !show); 
+    }
+
+    function toggleModal(id, show) { 
+        const el = document.getElementById(id);
+        if(el) el.classList.toggle('hidden', !show); 
+    }
         function toggleCart() { document.getElementById('cart-items-box').classList.toggle('hidden'); }
 
        async function register() {
