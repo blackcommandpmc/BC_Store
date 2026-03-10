@@ -121,10 +121,6 @@
             <button class="btn-admin-add" onclick="toggleModal('admin-modal', true)">➕ NOVO ITEM</button>
         </div>
 
-        <div style="width: 100%; margin-bottom: 20px;">
-            <input type="text" id="search-input" placeholder="🔍 Pesquisar armamento..." oninput="filterProducts()" style="background: rgba(0,0,0,0.5); border: 1px solid var(--gold); padding: 12px; font-size: 1em;">
-        </div>
-
         <div class="main-content">
             <div id="store-view"></div>
             <div style="height: 100px;"></div>
@@ -214,21 +210,7 @@
             });
             showLoading(false);
         }
-
-        function filterProducts() {
-            const term = document.getElementById('search-input').value.toLowerCase();
-            const cards = document.querySelectorAll('.product-card');
-            const sections = document.querySelectorAll('.category-section');
-            cards.forEach(card => {
-                const name = card.querySelector('h4').innerText.toLowerCase();
-                card.style.display = name.includes(term) ? "block" : "none";
-            });
-            sections.forEach(sec => {
-                const hasVisible = Array.from(sec.querySelectorAll('.product-card')).some(c => c.style.display !== "none");
-                sec.style.display = hasVisible ? "block" : "none";
-            });
-        }
-
+        
         async function saveProduct() {
             showLoading(true);
             const id = document.getElementById('edit-id').value;
