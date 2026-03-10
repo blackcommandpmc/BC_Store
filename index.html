@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
-            /* REPLACE BACKGROUND IMAGE HERE */
             --bg-image: url('https://i.postimg.cc/LXdvgLxk/black-command.png');
             --gold: #d4af37;
             --bright-red: #ff0000;
@@ -37,76 +36,49 @@
 
         /* AUTH & MODALS */
         #auth-screen { height: 100vh; width: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.6); }
-        .auth-card, .modal { background: rgba(0,0,0,0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--gold); width: 300px; text-align: center; }
+        .auth-card, .modal { background: rgba(0,0,0,0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--gold); width: 320px; text-align: center; }
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
 
-        /* CENTRALIZED STORE LAYOUT */
-        #store-screen { 
-            width: 100%; max-width: 1000px; 
-            padding: 20px; box-sizing: border-box;
-            display: flex; flex-direction: column; align-items: center;
-        }
+        /* DROPDOWN COLOR FIX */
+        select option { color: black; background: white; }
 
-        .main-content { width: 100%; }
+        /* STORE LAYOUT */
+        #store-screen { width: 100%; max-width: 1000px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
+        
+        /* ADMIN TOP BUTTON */
+        #admin-top-bar { position: fixed; top: 15px; right: 20px; z-index: 800; }
+        .btn-admin-add { background: var(--gold); color: black; width: auto; padding: 8px 15px; border-radius: 50px; box-shadow: 0 0 10px rgba(212,175,55,0.5); }
 
-        /* CATEGORY STYLING */
         .category-section { 
-            margin-bottom: 50px; 
-            background: rgba(0, 0, 0, 0.75); /* Translucent background */
-            backdrop-filter: blur(10px); 
-            padding: 20px; border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%; box-sizing: border-box;
+            margin-bottom: 50px; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); 
+            padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; box-sizing: border-box;
         }
 
         .category-title { 
-            color: var(--gold); 
-            text-transform: uppercase; 
-            font-size: 1.8em; 
-            margin: 0 0 20px 0; 
-            text-align: center;
-            /* Gold letters with Bright Red shadow */
-            text-shadow: 3px 3px 5px var(--bright-red);
-            font-weight: 900;
-            letter-spacing: 3px;
+            color: var(--gold); text-transform: uppercase; font-size: 1.8em; margin: 0 0 20px 0; 
+            text-align: center; text-shadow: 3px 3px 5px var(--bright-red); font-weight: 900; letter-spacing: 3px;
         }
         
-        /* PRODUCT GRID */
-        .product-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); 
-            gap: 15px; justify-items: center;
-        }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 15px; justify-items: center; }
 
         .product-card { 
-            background: rgba(255,255,255,0.08); 
-            padding: 10px; border-radius: 8px; text-align: center; 
-            border: 1px solid rgba(255,255,255,0.1);
-            transition: transform 0.2s; width: 100%; max-width: 160px;
+            background: rgba(255,255,255,0.08); padding: 8px; border-radius: 8px; text-align: center; 
+            border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 150px;
         }
-        .product-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.15); }
-        .product-card img { width: 100%; height: 90px; object-fit: cover; border-radius: 5px; }
-        .product-card h4 { margin: 8px 0 4px 0; font-size: 0.85em; text-shadow: 1px 1px 2px black; }
-        .product-card p { margin: 0 0 8px 0; color: #2ecc71; font-weight: bold; font-size: 0.95em; }
+        .product-card img { width: 100%; height: 80px; object-fit: cover; border-radius: 4px; }
+        .product-card h4 { margin: 8px 0 4px 0; font-size: 0.8em; }
+        .product-card p { margin: 0 0 8px 0; color: #2ecc71; font-weight: bold; font-size: 0.85em; }
 
-        /* CART PANEL (Now centralized or sticky bottom) */
         .cart-panel { 
             background: rgba(0,0,0,0.95); border-top: 2px solid var(--gold); 
             padding: 15px; position: fixed; bottom: 0; right: 20px; 
-            width: 280px; border-radius: 10px 10px 0 0; z-index: 500;
+            width: 280px; border-radius: 10px 10px 0 0; z-index: 500; font-size: 0.85em;
         }
 
-        /* INPUTS & BUTTONS */
         input, select, button { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; background: rgba(255,255,255,0.1); color: white; box-sizing: border-box; }
-        button { cursor: pointer; background: #27ae60; border: none; font-weight: bold; transition: 0.3s; }
-        button:hover { filter: brightness(1.2); }
+        button { cursor: pointer; background: #27ae60; border: none; font-weight: bold; }
         .btn-edit { background: #f39c12; font-size: 0.75em; }
         .btn-del { background: #c0392b; font-size: 0.75em; }
-        
-        .admin-panel-box {
-            background: rgba(0,0,0,0.85); padding: 20px; border-radius: 10px; 
-            border: 1px solid var(--gold); margin-bottom: 30px; width: 100%;
-        }
     </style>
 </head>
 <body>
@@ -117,7 +89,7 @@
         <div class="auth-card">
             <h2 style="color:var(--gold)">BEM-VINDO</h2>
             <input type="email" id="login-email" placeholder="E-mail">
-            <input type="password" id="login-pass" placeholder="Senha">
+            <input type="password" id="login-pass" placeholder="Senha" onkeypress="if(event.key==='Enter') login()">
             <button onclick="login()">ENTRAR</button>
             <button style="background:#2980b9" onclick="toggleModal('reg-modal', true)">CRIAR CONTA</button>
         </div>
@@ -135,38 +107,43 @@
         </div>
     </div>
 
+    <div id="admin-modal" class="modal-overlay hidden">
+        <div class="modal" style="width: 400px;">
+            <h3 id="admin-title" style="color:var(--gold)">Gerenciar Item</h3>
+            <input type="hidden" id="edit-id">
+            <input type="text" id="p-name" placeholder="Nome do Item">
+            <input type="number" id="p-price" placeholder="Preço ($)" onkeypress="if(event.key==='Enter') saveProduct()">
+            <input type="text" id="p-img" placeholder="Link da Foto">
+            <select id="p-cat">
+                <option value="Pistolas">Pistolas</option>
+                <option value="Submetralhadoras">Submetralhadoras</option>
+                <option value="Fuzis">Fuzis</option>
+                <option value="Especiais">Especiais</option>
+            </select>
+            <button onclick="saveProduct()">SALVAR NO BANCO</button>
+            <button class="btn-del" onclick="resetAdminForm(); toggleModal('admin-modal', false);">FECHAR</button>
+        </div>
+    </div>
+
     <div id="store-screen" class="hidden">
+        <div id="admin-top-bar" class="hidden">
+            <button class="btn-admin-add" onclick="toggleModal('admin-modal', true)">➕ NOVO ITEM</button>
+        </div>
+
         <div class="main-content">
-            <div id="admin-panel" class="hidden admin-panel-box">
-                <h3 id="admin-title" style="margin-top:0; color:var(--gold)">Painel de Gerenciamento</h3>
-                <input type="hidden" id="edit-id">
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                    <input type="text" id="p-name" placeholder="Nome do Item">
-                    <input type="number" id="p-price" placeholder="Preço ($)">
-                    <input type="text" id="p-img" placeholder="Link da Foto">
-                    <select id="p-cat">
-                        <option>Pistolas</option>
-                        <option>Submetralhadoras</option>
-                        <option>Fuzis</option>
-                        <option>Especiais</option>
-                    </select>
-                </div>
-                <button onclick="saveProduct()">SALVAR NO BANCO</button>
-                <button id="cancel-edit" class="hidden btn-del" onclick="resetAdminForm()">CANCELAR EDIÇÃO</button>
-            </div>
-
             <div id="store-view"></div>
-            <div style="height: 100px;"></div> </div>
+            <div style="height: 100px;"></div>
+        </div>
 
-        <div class="cart-panel" id="cart-container">
+        <div class="cart-panel">
             <h4 style="margin:0 0 10px 0; color:var(--gold); display:flex; justify-content: space-between;">
                 🛒 CARRINHO <span onclick="toggleCart()" style="cursor:pointer">➖</span>
             </h4>
             <div id="cart-items-box">
-                <div id="cart-items" style="max-height: 200px; overflow-y: auto;"></div>
+                <div id="cart-items" style="max-height: 150px; overflow-y: auto;"></div>
                 <div style="padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">
                     <h4 id="cart-total" style="margin: 10px 0">Total: $0</h4>
-                    <button onclick="checkout()">REALIZAR PEDIDO</button>
+                    <button onclick="checkout()">PEDIR VIA DISCORD</button>
                     <button class="btn-del" onclick="logout()" style="margin-top:8px">SAIR</button>
                 </div>
             </div>
@@ -212,7 +189,7 @@
         function initStore() {
             document.getElementById('auth-screen').classList.add('hidden');
             document.getElementById('store-screen').classList.remove('hidden');
-            if (currentUser.user_metadata.role === 'admin') document.getElementById('admin-panel').classList.remove('hidden');
+            if (currentUser.user_metadata.role === 'admin') document.getElementById('admin-top-bar').classList.remove('hidden');
             loadProducts();
         }
 
@@ -221,7 +198,6 @@
             const { data: products } = await supabaseClient.from('products').select('*');
             const view = document.getElementById('store-view');
             view.innerHTML = '';
-            
             categories.forEach(cat => {
                 const catItems = products?.filter(p => p.category === cat) || [];
                 if (catItems.length > 0) {
@@ -232,10 +208,10 @@
                                 <img src="${p.image_url}">
                                 <h4>${p.name}</h4>
                                 <p>$${p.price}</p>
-                                <button onclick="addToCart('${p.name}', ${p.price})">ADICIONAR</button>
+                                <button onclick="addToCart('${p.name}', ${p.price})">ADD</button>
                                 ${currentUser.user_metadata.role === 'admin' ? `
-                                    <button class="btn-edit" onclick="editProduct('${p.id}', '${p.name}', ${p.price}, '${p.image_url}', '${p.category}')">EDITAR</button>
-                                    <button class="btn-del" onclick="deleteProduct('${p.id}')">EXCLUIR</button>
+                                    <button class="btn-edit" onclick="editProduct('${p.id}', '${p.name}', ${p.price}, '${p.image_url}', '${p.category}')">EDT</button>
+                                    <button class="btn-del" onclick="deleteProduct('${p.id}')">X</button>
                                 ` : ''}
                             </div>`;
                     });
@@ -259,7 +235,7 @@
             if (id) ({ error } = await supabaseClient.from('products').update(item).eq('id', id));
             else ({ error } = await supabaseClient.from('products').insert([item]));
             showLoading(false);
-            if (error) alert(error.message); else { resetAdminForm(); loadProducts(); }
+            if (error) alert(error.message); else { resetAdminForm(); toggleModal('admin-modal', false); loadProducts(); }
         }
 
         function editProduct(id, name, price, img, cat) {
@@ -269,8 +245,7 @@
             document.getElementById('p-img').value = img;
             document.getElementById('p-cat').value = cat;
             document.getElementById('admin-title').innerText = "Editando Item";
-            document.getElementById('cancel-edit').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            toggleModal('admin-modal', true);
         }
 
         function resetAdminForm() {
@@ -279,11 +254,10 @@
             document.getElementById('p-price').value = '';
             document.getElementById('p-img').value = '';
             document.getElementById('admin-title').innerText = "Novo Item";
-            document.getElementById('cancel-edit').classList.add('hidden');
         }
 
         async function deleteProduct(id) {
-            if(confirm("Excluir item permanentemente?")) { 
+            if(confirm("Excluir item?")) { 
                 showLoading(true);
                 await supabaseClient.from('products').delete().eq('id', id); 
                 loadProducts(); 
@@ -324,7 +298,7 @@
         }
 
         async function checkout() {
-            if (cart.length === 0) return alert("Carrinho vazio!");
+            if (cart.length === 0) return alert("Vazio!");
             showLoading(true);
             const list = cart.map(i => `• ${i.qty}x ${i.name} ($${i.price * i.qty})`).join('\n');
             const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
@@ -334,20 +308,19 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         embeds: [{
-                            title: "🚨 NOVO PEDIDO RECEBIDO", color: 16711680,
+                            title: "🚨 NOVO PEDIDO", color: 16711680,
                             fields: [
                                 { name: "👤 Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
                                 { name: "📞 Telefone", value: currentUser.user_metadata.tel_ingame, inline: true },
                                 { name: "📦 Itens", value: list },
                                 { name: "💰 Total", value: `**$${total}**` }
                             ],
-                            footer: { text: "Sistema de Loja Online" },
                             timestamp: new Date()
                         }]
                     })
                 });
-                alert("Pedido enviado com sucesso!"); cart = []; updateCart();
-            } catch(e) { alert("Erro ao enviar para o Discord."); }
+                alert("Enviado!"); cart = []; updateCart();
+            } catch(e) { alert("Erro ao enviar."); }
             showLoading(false);
         }
 
