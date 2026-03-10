@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/png" href="https://i.postimg.cc/xNS99jbG/image.png">
-    <title>Black Command</title>
+    <title>Premium Store</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔫</text></svg>">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -13,17 +12,13 @@
             --gold: #d4af37;
             --bright-red: #ff0000;
         }
-
         body {
             margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
             background: var(--bg-image) no-repeat center center fixed;
             background-size: cover; color: white;
             display: flex; flex-direction: column; align-items: center;
         }
-
         .hidden { display: none !important; }
-
-        /* LOADER */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
@@ -36,56 +31,41 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* AUTH & MODALS */
         #auth-screen { height: 100vh; width: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.6); }
         .auth-card, .modal { background: rgba(0,0,0,0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--gold); width: 320px; text-align: center; }
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-
+        
         select option { color: black; background: white; }
-
         #store-screen { width: 100%; max-width: 1000px; padding: 20px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; }
         
         #admin-top-bar { position: fixed; top: 15px; right: 20px; z-index: 800; }
-        .btn-admin-add { background: var(--gold); color: black; width: auto; padding: 8px 15px; border-radius: 50px; box-shadow: 0 0 10px rgba(212,175,55,0.5); }
+        .btn-admin-add { background: var(--gold); color: black; width: auto; padding: 8px 15px; border-radius: 50px; font-weight: bold; cursor: pointer; }
 
         .category-section { 
             margin-bottom: 50px; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); 
             padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; box-sizing: border-box;
         }
-
         .category-title { 
             color: var(--gold); text-transform: uppercase; font-size: 1.8em; margin: 0 0 20px 0; 
             text-align: center; text-shadow: 3px 3px 5px var(--bright-red); font-weight: 900; letter-spacing: 3px;
         }
 
-        .product-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 20px; 
-            justify-items: center;
-            width: 100%;
-        }
-
-        @media (max-width: 600px) {
-            .product-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-items: center; width: 100%; }
+        @media (max-width: 600px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
 
         .product-card { 
-            background: rgba(255,255,255,0.08); 
-            padding: 12px; border-radius: 8px; text-align: center; 
+            background: rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center; 
             border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 280px; box-sizing: border-box;
         }
-
         .product-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 4px; }
         .product-card h4 { margin: 8px 0 4px 0; font-size: 0.9em; }
-        .product-card p { margin: 0 0 8px 0; color: #2ecc71; font-weight: bold; font-size: 1em; }
+        .product-card p { margin: 0 0 8px 0; color: #2ecc71; font-weight: bold; }
 
         .cart-panel { 
             background: rgba(0,0,0,0.95); border-top: 2px solid var(--gold); 
             padding: 15px; position: fixed; bottom: 0; right: 20px; 
             width: 280px; border-radius: 10px 10px 0 0; z-index: 500; font-size: 0.85em;
         }
-
         input, select, button { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; background: rgba(255,255,255,0.1); color: white; box-sizing: border-box; }
         button { cursor: pointer; background: #27ae60; border: none; font-weight: bold; }
         .btn-edit { background: #f39c12; font-size: 0.75em; }
@@ -99,7 +79,7 @@
     <div id="auth-screen">
         <div class="auth-card">
             <h2 style="color:var(--gold)">BEM-VINDO</h2>
-            <input type="email" id="login-email" placeholder="E-mail">
+            <input type="text" id="login-user" placeholder="Usuário">
             <input type="password" id="login-pass" placeholder="Senha" onkeypress="if(event.key==='Enter') login()">
             <button onclick="login()">ENTRAR</button>
             <button style="background:#2980b9" onclick="toggleModal('reg-modal', true)">CRIAR CONTA</button>
@@ -109,10 +89,9 @@
     <div id="reg-modal" class="modal-overlay hidden">
         <div class="modal">
             <h3 style="color:var(--gold)">Cadastro</h3>
-            <input type="text" id="reg-bot-check" style="display:none" tabindex="-1" autocomplete="off">
-            <input type="text" id="reg-nome" placeholder="Nome in-game">
+            <input type="text" id="reg-bot-check" style="display:none" tabindex="-1">
+            <input type="text" id="reg-nome" placeholder="Usuário (Nome in-game)">
             <input type="text" id="reg-tel" placeholder="Telefone in-game">
-            <input type="email" id="reg-email" placeholder="E-mail">
             <input type="password" id="reg-pass" placeholder="Senha">
             <button id="btn-finalizar-reg" onclick="register()">FINALIZAR</button>
             <button class="btn-del" onclick="toggleModal('reg-modal', false)">CANCELAR</button>
@@ -132,7 +111,7 @@
                 <option value="Fuzis">Fuzis</option>
                 <option value="Especiais">Especiais</option>
             </select>
-            <button onclick="saveProduct()">SALVAR NO BANCO</button>
+            <button onclick="saveProduct()">SALVAR</button>
             <button class="btn-del" onclick="resetAdminForm(); toggleModal('admin-modal', false);">FECHAR</button>
         </div>
     </div>
@@ -140,6 +119,10 @@
     <div id="store-screen" class="hidden">
         <div id="admin-top-bar" class="hidden">
             <button class="btn-admin-add" onclick="toggleModal('admin-modal', true)">➕ NOVO ITEM</button>
+        </div>
+
+        <div style="width: 100%; margin-bottom: 20px;">
+            <input type="text" id="search-input" placeholder="🔍 Pesquisar armamento..." oninput="filterProducts()" style="background: rgba(0,0,0,0.5); border: 1px solid var(--gold); padding: 12px; font-size: 1em;">
         </div>
 
         <div class="main-content">
@@ -155,7 +138,7 @@
                 <div id="cart-items" style="max-height: 150px; overflow-y: auto;"></div>
                 <div style="padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">
                     <h4 id="cart-total" style="margin: 10px 0">Total: $0</h4>
-                    <button onclick="checkout()">PEDIR VIA DISCORD</button>
+                    <button onclick="checkout()">Encomendar</button>
                     <button class="btn-del" onclick="logout()" style="margin-top:8px">SAIR</button>
                 </div>
             </div>
@@ -170,42 +153,31 @@
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         let cart = [];
         let currentUser = null;
-        let isRegistering = false;
         const categories = ["Pistolas", "Submetralhadoras", "Fuzis", "Especiais"];
 
-        function showLoading(show) { 
-            const loader = document.getElementById('loader');
-            if(loader) loader.classList.toggle('hidden', !show); 
-        }
-
-        function toggleModal(id, show) { 
-            const el = document.getElementById(id);
-            if(el) el.classList.toggle('hidden', !show); 
-        }
-
+        function showLoading(show) { const l = document.getElementById('loader'); if(l) l.classList.toggle('hidden', !show); }
+        function toggleModal(id, show) { const e = document.getElementById(id); if(e) e.classList.toggle('hidden', !show); }
         function toggleCart() { document.getElementById('cart-items-box').classList.toggle('hidden'); }
 
         async function register() {
             if (document.getElementById('reg-bot-check').value !== "") return;
             showLoading(true);
+            const user = document.getElementById('reg-nome').value.trim().toLowerCase();
+            const fakeEmail = `${user}@loja.com`;
+            
             const metadata = { nome_ingame: document.getElementById('reg-nome').value, tel_ingame: document.getElementById('reg-tel').value, role: 'customer' };
-            const { error } = await supabaseClient.auth.signUp({ 
-                email: document.getElementById('reg-email').value, 
-                password: document.getElementById('reg-pass').value, 
-                options: { data: metadata } 
-            });
+            const { error } = await supabaseClient.auth.signUp({ email: fakeEmail, password: document.getElementById('reg-pass').value, options: { data: metadata } });
             showLoading(false);
             if (error) alert(error.message); else { alert("Sucesso! Faça Login."); toggleModal('reg-modal', false); }
         }
 
         async function login() {
             showLoading(true);
-            const { data, error } = await supabaseClient.auth.signInWithPassword({ 
-                email: document.getElementById('login-email').value, 
-                password: document.getElementById('login-pass').value 
-            });
+            const user = document.getElementById('login-user').value.trim().toLowerCase();
+            const fakeEmail = `${user}@loja.com`;
+            const { data, error } = await supabaseClient.auth.signInWithPassword({ email: fakeEmail, password: document.getElementById('login-pass').value });
             showLoading(false);
-            if (error) alert(error.message); else { currentUser = data.user; initStore(); }
+            if (error) alert("Usuário ou senha incorretos."); else { currentUser = data.user; initStore(); }
         }
 
         function initStore() {
@@ -225,17 +197,16 @@
                 if (catItems.length > 0) {
                     let section = `<div class="category-section"><h2 class="category-title">${cat}</h2><div class="product-grid">`;
                     catItems.forEach(p => {
-                        section += `
-                            <div class="product-card">
-                                <img src="${p.image_url}">
-                                <h4>${p.name}</h4>
-                                <p>$${p.price}</p>
-                                <button onclick="addToCart('${p.name}', ${p.price})">ADD</button>
-                                ${currentUser.user_metadata.role === 'admin' ? `
-                                    <button class="btn-edit" onclick="editProduct('${p.id}', '${p.name}', ${p.price}, '${p.image_url}', '${p.category}')">EDT</button>
-                                    <button class="btn-del" onclick="deleteProduct('${p.id}')">X</button>
-                                ` : ''}
-                            </div>`;
+                        section += `<div class="product-card">
+                            <img src="${p.image_url}">
+                            <h4>${p.name}</h4>
+                            <p>$${p.price}</p>
+                            <button onclick="addToCart('${p.name}', ${p.price})">ADD</button>
+                            ${currentUser.user_metadata.role === 'admin' ? `
+                                <button class="btn-edit" onclick="editProduct('${p.id}', '${p.name}', ${p.price}, '${p.image_url}', '${p.category}')">EDT</button>
+                                <button class="btn-del" onclick="deleteProduct('${p.id}')">X</button>
+                            ` : ''}
+                        </div>`;
                     });
                     section += `</div></div>`;
                     view.innerHTML += section;
@@ -244,15 +215,24 @@
             showLoading(false);
         }
 
+        function filterProducts() {
+            const term = document.getElementById('search-input').value.toLowerCase();
+            const cards = document.querySelectorAll('.product-card');
+            const sections = document.querySelectorAll('.category-section');
+            cards.forEach(card => {
+                const name = card.querySelector('h4').innerText.toLowerCase();
+                card.style.display = name.includes(term) ? "block" : "none";
+            });
+            sections.forEach(sec => {
+                const hasVisible = Array.from(sec.querySelectorAll('.product-card')).some(c => c.style.display !== "none");
+                sec.style.display = hasVisible ? "block" : "none";
+            });
+        }
+
         async function saveProduct() {
             showLoading(true);
             const id = document.getElementById('edit-id').value;
-            const item = {
-                name: document.getElementById('p-name').value,
-                price: parseFloat(document.getElementById('p-price').value),
-                image_url: document.getElementById('p-img').value,
-                category: document.getElementById('p-cat').value
-            };
+            const item = { name: document.getElementById('p-name').value, price: parseFloat(document.getElementById('p-price').value), image_url: document.getElementById('p-img').value, category: document.getElementById('p-cat').value };
             let error;
             if (id) ({ error } = await supabaseClient.from('products').update(item).eq('id', id));
             else ({ error } = await supabaseClient.from('products').insert([item]));
@@ -270,21 +250,9 @@
             toggleModal('admin-modal', true);
         }
 
-        function resetAdminForm() {
-            document.getElementById('edit-id').value = '';
-            document.getElementById('p-name').value = '';
-            document.getElementById('p-price').value = '';
-            document.getElementById('p-img').value = '';
-            document.getElementById('admin-title').innerText = "Novo Item";
-        }
+        function resetAdminForm() { document.getElementById('edit-id').value = ''; document.getElementById('p-name').value = ''; document.getElementById('p-price').value = ''; document.getElementById('p-img').value = ''; document.getElementById('admin-title').innerText = "Novo Item"; }
 
-        async function deleteProduct(id) {
-            if(confirm("Excluir item?")) { 
-                showLoading(true);
-                await supabaseClient.from('products').delete().eq('id', id); 
-                loadProducts(); 
-            }
-        }
+        async function deleteProduct(id) { if(confirm("Excluir item?")) { showLoading(true); await supabaseClient.from('products').delete().eq('id', id); loadProducts(); } }
 
         function addToCart(name, price) {
             const item = cart.find(i => i.name === name);
@@ -307,96 +275,67 @@
             let total = 0;
             cart.forEach(i => {
                 total += i.price * i.qty;
-                container.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid #333; font-size:0.8em;">
-                        <span>${i.qty}x ${i.name}</span>
-                        <div>
-                            <button style="width:auto; padding:2px 6px" onclick="removeFromCart('${i.name}')">-</button>
-                            <button style="width:auto; padding:2px 6px" class="btn-del" onclick="removeFromCart('${i.name}', true)">x</button>
-                        </div>
-                    </div>`;
+                container.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid #333; font-size:0.8em;">
+                    <span>${i.qty}x ${i.name}</span>
+                    <div>
+                        <button style="width:auto; padding:2px 6px" onclick="removeFromCart('${i.name}')">-</button>
+                        <button style="width:auto; padding:2px 6px" class="btn-del" onclick="removeFromCart('${i.name}', true)">x</button>
+                    </div>
+                </div>`;
             });
             document.getElementById('cart-total').innerText = `Total: $${total}`;
         }
 
-async function checkout() {
-    if (cart.length === 0) return alert("Vazio!");
+        async function checkout() {
+            if (cart.length === 0) return alert("Vazio!");
+            const now = Date.now();
+            const storageKey = 'checkout_history';
+            let history = JSON.parse(localStorage.getItem(storageKey) || "[]");
+            history = history.filter(time => now - time < 1800000); // RESET 30 MIN
 
-    const now = Date.now();
-    const storageKey = 'checkout_history';
-    let history = JSON.parse(localStorage.getItem(storageKey) || "[]");
+            const count = history.length;
+            let waitTime = 0;
+            if (count >= 5) waitTime = 60;
+            else if (count >= 4) waitTime = 30;
+            else if (count >= 3) waitTime = 10;
+            else if (count >= 2) waitTime = 5;
 
-    // Mantém apenas histórico das últimas 2 horas
-    history = history.filter(time => now - time < 7200000);
-
-    const count = history.length;
-    let waitTime = 0;
-
-    // Definição da escada progressiva baseada em TENTATIVAS
-    if (count >= 5) waitTime = 60;
-    else if (count >= 4) waitTime = 30;
-    else if (count >= 3) waitTime = 10;
-    else if (count >= 2) waitTime = 5;
-
-    if (waitTime > 0) {
-        const lastOrder = history[history.length - 1];
-        const msPassed = now - lastOrder;
-        const msWait = waitTime * 60 * 1000;
-
-        if (msPassed < msWait) {
-            const secondsLeft = Math.ceil((msWait - msPassed) / 1000);
-            const minutesLeft = Math.ceil(secondsLeft / 60);
-            
-            alert(`⚠️ SISTEMA ANTI-FLOOD\n\n` +
-                  `Você já realizou ${count} tentativas recentemente.\n` +
-                  `Sua espera atual é de: ${waitTime} minutos.\n\n` +
-                  `Aguarde aproximadamente ${minutesLeft} minuto(s).`);
-            return;
+            if (waitTime > 0) {
+                const lastOrder = history[history.length - 1];
+                const msPassed = now - lastOrder;
+                const msWait = waitTime * 60 * 1000;
+                if (msPassed < msWait) {
+                    const minLeft = Math.ceil((msWait - msPassed) / 60000);
+                    alert(`⚠️ ANTI-FLOOD\nTentativas: ${count}\nEspera: ${waitTime} min.\nAguarde ${minLeft} min.`);
+                    return;
+                }
+            }
+            history.push(now);
+            localStorage.setItem(storageKey, JSON.stringify(history));
+            showLoading(true);
+            const list = cart.map(i => `• ${i.qty}x ${i.name} ($${i.price * i.qty})`).join('\n');
+            const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+            try {
+                await fetch(DISCORD_WEBHOOK, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        embeds: [{
+                            title: "🚨 NOVO PEDIDO", color: 16711680,
+                            fields: [
+                                { name: "👤 Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
+                                { name: "📞 Telefone", value: currentUser.user_metadata.tel_ingame, inline: true },
+                                { name: "📦 Itens", value: list },
+                                { name: "💰 Total", value: `**$${total}**` }
+                            ],
+                            timestamp: new Date()
+                        }]
+                    })
+                });
+                alert("Enviado!"); cart = []; updateCart();
+            } catch(e) { alert("Erro ao enviar."); }
+            showLoading(false);
         }
-    }
-
-    // REGISTRA A TENTATIVA AGORA (Antes do fetch)
-    // Isso garante que mesmo que o envio falhe ou ele tente de novo rápido, a contagem subiu.
-    history.push(now);
-    localStorage.setItem(storageKey, JSON.stringify(history));
-
-    showLoading(true);
-    const list = cart.map(i => `• ${i.qty}x ${i.name} ($${i.price * i.qty})`).join('\n');
-    const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-
-    try {
-        const response = await fetch(DISCORD_WEBHOOK, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                embeds: [{
-                    title: "🚨 NOVO PEDIDO", 
-                    color: 16711680,
-                    fields: [
-                        { name: "👤 Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
-                        { name: "📞 Telefone", value: currentUser.user_metadata.tel_ingame, inline: true },
-                        { name: "📦 Itens", value: list },
-                        { name: "💰 Total", value: `**$${total}**` }
-                    ],
-                    footer: { text: `Tentativa de pedido nº: ${history.length}` },
-                    timestamp: new Date()
-                }]
-            })
-        });
-
-        if (response.ok) {
-            alert(`✅ Pedido enviado!\n\nEsta foi sua tentativa nº ${history.length}.\nO tempo de espera aumentou para a próxima.`);
-            cart = [];
-            updateCart();
-        } else {
-            alert("Erro ao enviar. A tentativa foi contabilizada no limite de flood.");
-        }
-    } catch(e) {
-        alert("Erro de conexão. A tentativa foi contabilizada.");
-    }
-    showLoading(false);
-}
-
         function logout() { location.reload(); }
     </script>
 </body>
