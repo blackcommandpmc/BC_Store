@@ -12,93 +12,53 @@
             --gold: #d4af37;
             --bright-red: #ff0000;
         }
-
         body {
             margin: 0; padding: 0; font-family: 'Segoe UI', sans-serif;
             background: var(--bg-image) no-repeat center center fixed;
             background-size: cover; color: white;
             display: flex; flex-direction: column; align-items: center;
         }
-
         .hidden { display: none !important; }
-
-        /* LOADER */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 9999;
+            background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9999;
         }
-        .spinner {
-            width: 40px; height: 40px; border: 4px solid #333;
-            border-top: 4px solid var(--gold); border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+        .spinner { width: 40px; height: 40px; border: 4px solid #333; border-top: 4px solid var(--gold); border-radius: 50%; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
         /* TOP BAR */
         .top-bar {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(10px);
-            border-bottom: 2px solid var(--gold);
-            display: flex; align-items: center; justify-content: center;
+            border-bottom: 2px solid var(--gold); display: flex; align-items: center; justify-content: center;
             z-index: 900; padding: 0 20px; box-sizing: border-box;
         }
-        .top-bar h1 {
-            color: var(--gold); font-size: 1.5em; text-transform: uppercase;
-            letter-spacing: 4px; text-shadow: 2px 2px 4px var(--bright-red);
-            margin: 0; font-weight: 900;
-        }
+        .top-bar h1 { color: var(--gold); font-size: 1.5em; text-transform: uppercase; letter-spacing: 4px; text-shadow: 2px 2px 4px var(--bright-red); margin: 0; font-weight: 900; }
         .search-container { position: absolute; right: 20px; width: 250px; }
-        #search-input { 
-            background: rgba(255,255,255,0.1); border: 1px solid var(--gold); 
-            padding: 8px 12px; color: white; border-radius: 5px; width: 100%;
-        }
+        #search-input { background: rgba(255,255,255,0.1); border: 1px solid var(--gold); padding: 8px 12px; color: white; border-radius: 5px; width: 100%; }
 
-        /* AUTH & MODALS */
-        #auth-screen { height: 100vh; width: 100%; display: flex; justify-content: center; align-items: center; background: rgba(0,0,0,0.6); }
-        .auth-card, .modal { background: rgba(0,0,0,0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--gold); width: 340px; text-align: center; }
+        /* MODALS */
         .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .auth-card, .modal { background: rgba(0,0,0,0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--gold); width: 340px; text-align: center; }
 
-        /* STORE LAYOUT */
+        /* STORE */
         #store-screen { width: 100%; max-width: 1100px; padding: 80px 20px 20px 20px; box-sizing: border-box; }
-        
         #admin-top-bar { position: fixed; top: 75px; right: 20px; z-index: 800; }
         .btn-admin-add { background: var(--gold); color: black; padding: 8px 15px; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; }
 
-        .category-section { 
-            margin-bottom: 50px; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); 
-            padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; box-sizing: border-box;
-        }
-        .category-title { 
-            color: var(--gold); text-transform: uppercase; font-size: 1.8em; margin: 0 0 20px 0; 
-            text-align: center; text-shadow: 3px 3px 5px var(--bright-red); font-weight: 900; letter-spacing: 3px;
-        }
-
+        .category-section { margin-bottom: 50px; background: rgba(0, 0, 0, 0.75); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); width: 100%; box-sizing: border-box; }
+        .category-title { color: var(--gold); text-transform: uppercase; font-size: 1.8em; margin: 0 0 20px 0; text-align: center; text-shadow: 3px 3px 5px var(--bright-red); font-weight: 900; }
         .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; justify-items: center; width: 100%; }
-        @media (max-width: 850px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 500px) { .product-grid { grid-template-columns: repeat(1, 1fr); } .search-container { position: relative; right: 0; width: 100%; margin-top: 10px; } .top-bar { height: auto; flex-direction: column; padding: 10px; } #store-screen { padding-top: 120px; } }
-
-        .product-card { 
-            background: rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center; 
-            border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 320px; box-sizing: border-box;
-        }
+        
+        .product-card { background: rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1); width: 100%; max-width: 320px; box-sizing: border-box; }
         .product-card img { width: 100%; height: 150px; object-fit: cover; border-radius: 4px; margin-bottom: 10px; }
-        .product-card h4 { margin: 5px 0 10px 0; font-size: 1em; text-transform: uppercase; }
-
-        /* PRICING INFO */
-        .info-prices { 
-            display: flex; background: rgba(0,0,0,0.4); border-radius: 5px; 
-            margin-bottom: 10px; padding: 8px; justify-content: space-around;
-        }
-        .price-item { display: flex; flex-direction: column; }
-        .p-lab { font-size: 0.65em; opacity: 0.8; }
+        .info-prices { display: flex; background: rgba(0,0,0,0.4); border-radius: 5px; margin-bottom: 10px; padding: 8px; justify-content: space-around; }
+        .p-lab { font-size: 0.65em; opacity: 0.8; display: block; }
         .p-val { font-weight: 900; font-size: 1.1em; }
 
-        .cart-panel { 
-            background: rgba(0,0,0,0.95); border-top: 2px solid var(--gold); 
-            padding: 15px; position: fixed; bottom: 0; right: 20px; 
-            width: 300px; border-radius: 10px 10px 0 0; z-index: 500; font-size: 0.85em;
-        }
+        /* CARRINHO */
+        .cart-panel { background: rgba(0,0,0,0.95); border-top: 2px solid var(--gold); padding: 15px; position: fixed; bottom: 0; right: 20px; width: 300px; border-radius: 10px 10px 0 0; z-index: 500; font-size: 0.85em; }
+        .cart-total-line { display: flex; justify-content: space-between; margin: 5px 0; font-weight: bold; }
 
         input, select, button { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; background: rgba(255,255,255,0.1); color: white; box-sizing: border-box; }
         button { cursor: pointer; font-weight: bold; border:none; transition: 0.2s; }
@@ -108,7 +68,7 @@
 </head>
 <body>
 
-    <div id="loader" class="hidden"><div class="spinner"></div><p>Processando...</p></div>
+    <div id="loader" class="hidden"><div class="spinner"></div></div>
 
     <div id="auth-screen">
         <div class="auth-card">
@@ -123,8 +83,7 @@
     <div id="reg-modal" class="modal-overlay hidden">
         <div class="modal">
             <h3 style="color:var(--gold)">Cadastro</h3>
-            <input type="text" id="reg-bot-check" style="display:none" tabindex="-1">
-            <input type="text" id="reg-nome" placeholder="Usuário (Ex: Nome_Sobrenome)">
+            <input type="text" id="reg-nome" placeholder="Usuário (Nome_Sobrenome)">
             <input type="text" id="reg-tel" placeholder="Telefone in-game">
             <input type="password" id="reg-pass" placeholder="Senha">
             <button onclick="register()">FINALIZAR</button>
@@ -135,33 +94,21 @@
     <div id="store-screen" class="hidden">
         <div class="top-bar">
             <h1>Encomenda de Armas</h1>
-            <div class="search-container">
-                <input type="text" id="search-input" placeholder="🔍 Pesquisar..." oninput="filterProducts()">
-            </div>
+            <div class="search-container"><input type="text" id="search-input" placeholder="🔍 Pesquisar..." oninput="filterProducts()"></div>
         </div>
-
-        <div id="admin-top-bar" class="hidden">
-            <button class="btn-admin-add" onclick="toggleModal('admin-modal', true)">➕ NOVO ITEM</button>
-        </div>
-
-        <div class="main-content">
-            <div id="store-view"></div>
-            <div style="height: 120px;"></div>
-        </div>
+        <div id="admin-top-bar" class="hidden"><button class="btn-admin-add" onclick="openAddModal()">➕ NOVO ITEM</button></div>
+        <div id="store-view"></div>
+        <div style="height: 120px;"></div>
 
         <div class="cart-panel">
-            <h4 style="margin:0 0 10px 0; color:var(--gold); display:flex; justify-content: space-between;">
-                🛒 CARRINHO <span onclick="toggleCart()" style="cursor:pointer">➖</span>
-            </h4>
+            <h4 style="margin:0 0 10px 0; color:var(--gold); display:flex; justify-content: space-between;">🛒 CARRINHO <span onclick="toggleCart()" style="cursor:pointer">➖</span></h4>
             <div id="cart-items-box">
-                <div id="cart-items" style="max-height: 180px; overflow-y: auto;"></div>
+                <div id="cart-items" style="max-height: 180px; overflow-y: auto; margin-bottom: 10px;"></div>
                 <div style="padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">
-                    <div id="cart-totals-display" style="margin-bottom: 10px;">
-                        <p id="total-pista" style="margin: 2px 0; color: white;">Total Pista: $0</p>
-                        <p id="total-parceria" style="margin: 2px 0; color: var(--gold);">Total Parceria: $0</p>
-                    </div>
-                    <button onclick="checkout()" style="background:#27ae60">ENVIAR ENCOMENDA</button>
-                    <button class="btn-del" onclick="logout()" style="margin-top:8px">SAIR</button>
+                    <div class="cart-total-line"><span>Total Pista:</span><span id="total-pista">$0</span></div>
+                    <div class="cart-total-line" style="color:var(--gold)"><span>Total Parceria:</span><span id="total-parceria">$0</span></div>
+                    <button onclick="checkout()" style="background:#27ae60; margin-top:10px">ENVIAR ENCOMENDA</button>
+                    <button class="btn-del" onclick="location.reload()" style="margin-top:8px">SAIR</button>
                 </div>
             </div>
         </div>
@@ -190,184 +137,105 @@
         const SUPABASE_URL = 'https://pvwogvjmcfqbqulbwpdm.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Fhl1kcLddx4TjiHqJwWvrg_r6nbMq0f';
         const DISCORD_WEBHOOK = 'https://discord.com/api/webhooks/1480276662615802033/QpfNdcbcmapSjgbIiayUOtuhqZOfqijMoiGBtkUIP7k-v--YO5kEDByEbRZiXRxzL8M7';
-
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        let cart = [];
-        let currentUser = null;
-        const categories = ["Pistolas", "Submetralhadoras", "Fuzis", "Especiais"];
+        let cart = []; let currentUser = null;
 
-        function showLoading(show) { document.getElementById('loader').classList.toggle('hidden', !show); }
-        function toggleModal(id, show) { document.getElementById(id).classList.toggle('hidden', !show); }
+        function showLoading(s) { document.getElementById('loader').classList.toggle('hidden', !s); }
+        function toggleModal(id, s) { document.getElementById(id).classList.toggle('hidden', !s); }
         function toggleCart() { document.getElementById('cart-items-box').classList.toggle('hidden'); }
 
-        async function register() {
-            if (document.getElementById('reg-bot-check').value !== "") return;
-            showLoading(true);
-            const user = document.getElementById('reg-nome').value.trim().toLowerCase();
-            const { error } = await supabaseClient.auth.signUp({ 
-                email: `${user}@loja.com`, password: document.getElementById('reg-pass').value,
-                options: { data: { nome_ingame: document.getElementById('reg-nome').value, tel_ingame: document.getElementById('reg-tel').value, role: 'customer' } }
-            });
-            showLoading(false);
-            if (error) alert(error.message); else { alert("Sucesso! Faça Login."); toggleModal('reg-modal', false); }
-        }
-
         async function login() {
-            showLoading(true);
-            const user = document.getElementById('login-user').value.trim().toLowerCase();
+            showLoading(true); const user = document.getElementById('login-user').value.trim().toLowerCase();
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email: `${user}@loja.com`, password: document.getElementById('login-pass').value });
-            showLoading(false);
-            if (error) alert("Dados inválidos."); else { currentUser = data.user; initStore(); }
+            showLoading(false); if (error) alert("Dados inválidos."); else { currentUser = data.user; initStore(); }
         }
 
-        function initStore() {
-            document.getElementById('auth-screen').classList.add('hidden');
-            document.getElementById('store-screen').classList.remove('hidden');
-            if (currentUser.user_metadata.role === 'admin') document.getElementById('admin-top-bar').classList.remove('hidden');
-            loadProducts();
+        async function register() {
+            showLoading(true); const user = document.getElementById('reg-nome').value.trim().toLowerCase();
+            const { error } = await supabaseClient.auth.signUp({ email: `${user}@loja.com`, password: document.getElementById('reg-pass').value, options: { data: { nome_ingame: document.getElementById('reg-nome').value, tel_ingame: document.getElementById('reg-tel').value, role: 'customer' } } });
+            showLoading(false); if (error) alert(error.message); else { alert("Sucesso!"); toggleModal('reg-modal', false); }
         }
+
+        function initStore() { document.getElementById('auth-screen').classList.add('hidden'); document.getElementById('store-screen').classList.remove('hidden'); if (currentUser.user_metadata.role === 'admin') document.getElementById('admin-top-bar').classList.remove('hidden'); loadProducts(); }
 
         async function loadProducts() {
-            showLoading(true);
-            const { data: products } = await supabaseClient.from('products').select('*');
-            const view = document.getElementById('store-view');
-            view.innerHTML = '';
-            categories.forEach(cat => {
-                const catItems = products?.filter(p => p.category === cat) || [];
-                if (catItems.length > 0) {
-                    let section = `<div class="category-section"><h2 class="category-title">${cat}</h2><div class="product-grid">`;
-                    catItems.forEach(p => {
-                        section += `
-                            <div class="product-card">
-                                <img src="${p.image_url}">
-                                <h4>${p.name}</h4>
-                                <div class="info-prices">
-                                    <div class="price-item"><span class="p-lab">PISTA</span><span class="p-val">$${p.price_pista}</span></div>
-                                    <div class="price-item"><span class="p-lab" style="color:var(--gold)">PARCERIA</span><span class="p-val" style="color:var(--gold)">$${p.price_partner}</span></div>
-                                </div>
-                                <button class="btn-buy" onclick="addToCart('${p.name}', ${p.price_pista}, ${p.price_partner})">ADICIONAR</button>
-                                ${currentUser.user_metadata.role === 'admin' ? `
-                                    <div style="display:flex; gap:5px; margin-top:10px">
-                                        <button class="btn-edit" onclick="editProduct('${p.id}', '${p.name}', ${p.price_pista}, ${p.price_partner}, '${p.image_url}', '${p.category}')">EDT</button>
-                                        <button class="btn-del" onclick="deleteProduct('${p.id}')" style="margin-top:10px">DEL</button>
-                                    </div>
-                                ` : ''}
-                            </div>`;
+            showLoading(true); const { data: products } = await supabaseClient.from('products').select('*');
+            const view = document.getElementById('store-view'); view.innerHTML = '';
+            ["Pistolas", "Submetralhadoras", "Fuzis", "Especiais"].forEach(cat => {
+                const items = products?.filter(p => p.category === cat) || [];
+                if (items.length > 0) {
+                    let html = `<div class="category-section"><h2 class="category-title">${cat}</h2><div class="product-grid">`;
+                    items.forEach(p => {
+                        html += `<div class="product-card"><img src="${p.image_url}"><h4>${p.name}</h4><div class="info-prices"><div><span class="p-lab">PISTA</span><span class="p-val">$${p.price_pista}</span></div><div><span class="p-lab" style="color:var(--gold)">PARCERIA</span><span class="p-val" style="color:var(--gold)">$${p.price_partner}</span></div></div><button class="btn-buy" onclick="addToCart('${p.name}', ${p.price_pista}, ${p.price_partner})">ADICIONAR</button>
+                        ${currentUser.user_metadata.role === 'admin' ? `<div style="display:flex; gap:5px; margin-top:10px"><button class="btn-edit" onclick="editProduct('${p.id}','${p.name}',${p.price_pista},${p.price_partner},'${p.image_url}','${p.category}')">EDT</button><button class="btn-del" onclick="deleteProduct('${p.id}')">DEL</button></div>` : ''}</div>`;
                     });
-                    section += `</div></div>`;
-                    view.innerHTML += section;
+                    view.innerHTML += html + `</div></div>`;
                 }
+            }); showLoading(false);
+        }
+
+        function addToCart(name, pista, parc) { const item = cart.find(i => i.name === name); if (item) item.qty++; else cart.push({ name, pista, parc, qty: 1 }); updateCart(); }
+        function removeFromCart(name) { const idx = cart.findIndex(i => i.name === name); if (idx !== -1) { if (cart[idx].qty > 1) cart[idx].qty--; else cart.splice(idx, 1); } updateCart(); }
+
+        function updateCart() {
+            const div = document.getElementById('cart-items'); div.innerHTML = '';
+            let tPista = 0; let tParc = 0;
+            cart.forEach(i => {
+                tPista += i.pista * i.qty; tParc += i.parc * i.qty;
+                div.innerHTML += `<div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #333;"><span>${i.qty}x ${i.name}</span><button style="width:auto; padding:0 10px" class="btn-del" onclick="removeFromCart('${i.name}')">X</button></div>`;
             });
-            showLoading(false);
+            document.getElementById('total-pista').innerText = `$${tPista}`;
+            document.getElementById('total-parceria').innerText = `$${tParc}`;
+        }
+
+        async function checkout() {
+            if (cart.length === 0) return;
+            showLoading(true);
+            let tPista = 0; let tParc = 0;
+            const list = cart.map(i => {
+                tPista += i.pista * i.qty; tParc += i.parc * i.qty;
+                return `🔹 **${i.qty}x ${i.name}**\nㅤ Pista: $${i.pista * i.qty}\nㅤ Parceria: $${i.parc * i.qty}`;
+            }).join('\n\n');
+
+            await fetch(DISCORD_WEBHOOK, {
+                method: 'POST', headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    embeds: [{
+                        title: "🚨 NOVA ENCOMENDA", color: 16711680,
+                        fields: [
+                            { name: "👤 Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
+                            { name: "📞 Telefone", value: currentUser.user_metadata.tel_ingame, inline: true },
+                            { name: "📦 Detalhes do Pedido", value: list },
+                            { name: "💰 TOTAIS CALCULADOS", value: `**TOTAL PISTA:** $${tPista}\n**TOTAL PARCERIA:** $${tParc}` }
+                        ],
+                        timestamp: new Date()
+                    }]
+                })
+            });
+            alert("Pedido recebido!"); cart = []; updateCart(); showLoading(false);
         }
 
         function filterProducts() {
             const term = document.getElementById('search-input').value.toLowerCase();
-            const cards = document.querySelectorAll('.product-card');
-            cards.forEach(card => {
-                const name = card.querySelector('h4').innerText.toLowerCase();
-                card.style.display = name.includes(term) ? "block" : "none";
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.style.display = card.querySelector('h4').innerText.toLowerCase().includes(term) ? "block" : "none";
             });
         }
 
-        function addToCart(name, pista, parc) {
-            const item = cart.find(i => i.name === name);
-            if (item) item.qty++; else cart.push({ name, pista, parc, qty: 1 });
-            updateCart();
-        }
-
-        function removeFromCart(name) {
-            const idx = cart.findIndex(i => i.name === name);
-            if (idx !== -1) { if (cart[idx].qty > 1) cart[idx].qty--; else cart.splice(idx, 1); }
-            updateCart();
-        }
-
-        function updateCart() {
-            const container = document.getElementById('cart-items');
-            container.innerHTML = '';
-            let totalPista = 0;
-            let totalParceria = 0;
-
-            cart.forEach(i => {
-                totalPista += i.pista * i.qty;
-                totalParceria += i.parc * i.qty;
-                container.innerHTML += `
-                    <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #333;">
-                        <span>${i.qty}x ${i.name}</span>
-                        <button style="width:auto; padding:0 10px" class="btn-del" onclick="removeFromCart('${i.name}')">X</button>
-                    </div>`;
-            });
-
-            // ATUALIZA OS TOTAIS NA TELA
-            document.getElementById('total-pista').innerText = `Total Pista: $${totalPista}`;
-            document.getElementById('total-parceria').innerText = `Total Parceria: $${totalParceria}`;
-        }
-
-        async function checkout() {
-            if (cart.length === 0) return alert("Vazio!");
-            showLoading(true);
-
-            let totalPista = 0;
-            let totalParceria = 0;
-
-            const list = cart.map(i => {
-                totalPista += i.pista * i.qty;
-                totalParceria += i.parc * i.qty;
-                return `• ${i.qty}x **${i.name}**\n  - Pista: $${i.pista * i.qty}\n  - Parceria: $${i.parc * i.qty}`;
-            }).join('\n\n');
-
-            try {
-                await fetch(DISCORD_WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        embeds: [{
-                            title: "🚨 NOVA ENCOMENDA", color: 16711680,
-                            fields: [
-                                { name: "👤 Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
-                                { name: "📞 Telefone", value: currentUser.user_metadata.tel_ingame, inline: true },
-                                { name: "📦 Detalhes do Pedido", value: list },
-                                { name: "💰 TOTAL PISTA", value: `**$${totalPista}**`, inline: true },
-                                { name: "💰 TOTAL PARCERIA", value: `**$${totalParceria}**`, inline: true }
-                            ],
-                            timestamp: new Date()
-                        }]
-                    })
-                });
-                alert("Pedido recebido! Entraremos em contato dentro da cidade.");
-                cart = []; updateCart();
-            } catch(e) { alert("Erro de conexão."); }
-            showLoading(false);
-        }
-
+        function openAddModal() { document.getElementById('edit-id').value = ''; document.getElementById('admin-title').innerText = "Novo Item"; toggleModal('admin-modal', true); }
         async function saveProduct() {
-            showLoading(true);
-            const id = document.getElementById('edit-id').value;
-            const item = { 
-                name: document.getElementById('p-name').value, 
-                price_pista: parseFloat(document.getElementById('p-price-pista').value),
-                price_partner: parseFloat(document.getElementById('p-price-partner').value),
-                image_url: document.getElementById('p-img').value, 
-                category: document.getElementById('p-cat').value 
-            };
-            if (id) await supabaseClient.from('products').update(item).eq('id', id);
-            else await supabaseClient.from('products').insert([item]);
-            showLoading(false);
-            toggleModal('admin-modal', false); loadProducts();
+            showLoading(true); const id = document.getElementById('edit-id').value;
+            const item = { name: document.getElementById('p-name').value, price_pista: parseFloat(document.getElementById('p-price-pista').value), price_partner: parseFloat(document.getElementById('p-price-partner').value), image_url: document.getElementById('p-img').value, category: document.getElementById('p-cat').value };
+            if (id) await supabaseClient.from('products').update(item).eq('id', id); else await supabaseClient.from('products').insert([item]);
+            showLoading(false); toggleModal('admin-modal', false); loadProducts();
         }
 
         function editProduct(id, name, pista, parc, img, cat) {
-            document.getElementById('edit-id').value = id;
-            document.getElementById('p-name').value = name;
-            document.getElementById('p-price-pista').value = pista;
-            document.getElementById('p-price-partner').value = partner; // Note: ensure partner variable matches p.price_partner
-            document.getElementById('p-img').value = img;
-            document.getElementById('p-cat').value = cat;
-            toggleModal('admin-modal', true);
+            document.getElementById('edit-id').value = id; document.getElementById('p-name').value = name; document.getElementById('p-price-pista').value = pista; document.getElementById('p-price-partner').value = parc; document.getElementById('p-img').value = img; document.getElementById('p-cat').value = cat;
+            document.getElementById('admin-title').innerText = "Editar Item"; toggleModal('admin-modal', true);
         }
 
         async function deleteProduct(id) { if(confirm("Excluir?")) { await supabaseClient.from('products').delete().eq('id', id); loadProducts(); } }
-        function logout() { location.reload(); }
     </script>
 </body>
 </html>
