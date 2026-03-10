@@ -319,7 +319,7 @@
             document.getElementById('cart-total').innerText = `Total: $${total}`;
         }
 
-        async function checkout() {
+async function checkout() {
     if (cart.length === 0) return alert("Vazio!");
 
     const now = Date.now();
@@ -332,7 +332,7 @@
     const count = history.length;
     let waitTime = 0;
 
-    // Definição da escada progressiva
+    // Definição da escada progressiva baseada em TENTATIVAS
     if (count >= 5) waitTime = 60;
     else if (count >= 4) waitTime = 30;
     else if (count >= 3) waitTime = 10;
@@ -347,14 +347,18 @@
             const secondsLeft = Math.ceil((msWait - msPassed) / 1000);
             const minutesLeft = Math.ceil(secondsLeft / 60);
             
-            // MENSAGEM DINÂMICA
             alert(`⚠️ SISTEMA ANTI-FLOOD\n\n` +
-                  `Você já realizou ${count} pedidos recentemente.\n` +
-                  `Para evitar spam, sua espera atual é de: ${waitTime} minutos.\n\n` +
-                  `Aguarde aproximadamente ${minutesLeft} minuto(s) para tentar novamente.`);
+                  `Você já realizou ${count} tentativas recentemente.\n` +
+                  `Sua espera atual é de: ${waitTime} minutos.\n\n` +
+                  `Aguarde aproximadamente ${minutesLeft} minuto(s).`);
             return;
         }
     }
+
+    // REGISTRA A TENTATIVA AGORA (Antes do fetch)
+    // Isso garante que mesmo que o envio falhe ou ele tente de novo rápido, a contagem subiu.
+    history.push(now);
+    localStorage.setItem(storageKey, JSON.stringify(history));
 
     showLoading(true);
     const list = cart.map(i => `• ${i.qty}x ${i.name} ($${i.price * i.qty})`).join('\n');
@@ -374,25 +378,21 @@
                         { name: "📦 Itens", value: list },
                         { name: "💰 Total", value: `**$${total}**` }
                     ],
-                    footer: { text: `Frequência de pedidos: ${count + 1}` },
+                    footer: { text: `Tentativa de pedido nº: ${history.length}` },
                     timestamp: new Date()
                 }]
             })
         });
 
         if (response.ok) {
-            // Adiciona o timestamp atual ao histórico após sucesso
-            history.push(now);
-            localStorage.setItem(storageKey, JSON.stringify(history));
-            
-            alert(`✅ Pedido enviado!\n\nEste foi seu pedido nº ${history.length}.\nO tempo de espera aumentará se fizer pedidos muito seguidos.`);
+            alert(`✅ Pedido enviado!\n\nEsta foi sua tentativa nº ${history.length}.\nO tempo de espera aumentou para a próxima.`);
             cart = [];
             updateCart();
         } else {
-            alert("Erro ao enviar para o Discord.");
+            alert("Erro ao enviar. A tentativa foi contabilizada no limite de flood.");
         }
     } catch(e) {
-        alert("Erro de conexão.");
+        alert("Erro de conexão. A tentativa foi contabilizada.");
     }
     showLoading(false);
 }
