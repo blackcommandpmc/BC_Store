@@ -22,6 +22,19 @@
 
         .hidden { display: none !important; }
 
+        /* LOADER */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); display: flex; flex-direction: column;
+            justify-content: center; align-items: center; z-index: 9999;
+        }
+        .spinner {
+            width: 40px; height: 40px; border: 4px solid #333;
+            border-top: 4px solid var(--gold); border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
         /* TOP BAR */
         .top-bar {
             position: fixed; top: 0; left: 0; width: 100%; height: 70px;
@@ -41,13 +54,8 @@
             padding: 8px; color: white; border-radius: 5px; width: 100%;
         }
 
-        /* MODALS */
-        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
-        .auth-card, .modal { background: rgba(0,0,0,0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--gold); width: 340px; text-align: center; }
-
         /* STORE LAYOUT */
         #store-screen { width: 100%; max-width: 1100px; padding: 100px 20px 20px 20px; box-sizing: border-box; }
-        
         #admin-top-bar { position: fixed; top: 85px; right: 20px; z-index: 800; }
         .btn-admin-add { background: var(--gold); color: black; padding: 8px 15px; border-radius: 50px; font-weight: bold; cursor: pointer; border: none; }
 
@@ -59,20 +67,21 @@
 
         .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; }
         @media (max-width: 850px) { .product-grid { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 500px) { .product-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 500px) { .product-grid { grid-template-columns: 1fr; } .top-bar h1 { font-size: 1.1em; } }
 
         .product-card { background: rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
         .product-card img { width: 100%; height: 140px; object-fit: cover; border-radius: 4px; }
 
         .info-prices { display: flex; background: rgba(0,0,0,0.4); border-radius: 5px; margin: 10px 0; padding: 8px; justify-content: space-around; }
-        .p-lab { font-size: 0.6em; opacity: 0.8; display: block; }
+        .p-lab { font-size: 0.6em; opacity: 0.8; display: block; text-transform: uppercase; }
         .p-val { font-weight: 900; font-size: 1.1em; }
 
         .cart-panel { background: rgba(0,0,0,0.95); border-top: 2px solid var(--gold); padding: 15px; position: fixed; bottom: 0; right: 20px; width: 300px; border-radius: 10px 10px 0 0; z-index: 500; font-size: 0.85em; }
         input, select, button { width: 100%; padding: 10px; margin: 5px 0; border-radius: 5px; border: 1px solid #444; background: rgba(255,255,255,0.1); color: white; box-sizing: border-box; }
         button { cursor: pointer; font-weight: bold; border: none; }
-        
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 9999; }
+
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal, .auth-card { background: rgba(0,0,0,0.95); padding: 25px; border-radius: 12px; border: 1px solid var(--gold); width: 340px; text-align: center; }
     </style>
 </head>
 <body>
@@ -131,7 +140,7 @@
             <input type="text" id="p-name" placeholder="Nome">
             <input type="number" id="p-price-pista" placeholder="Preço Pista ($)">
             <input type="number" id="p-price-partner" placeholder="Preço Parceria ($)">
-            <input type="text" id="p-img" placeholder="URL da Imagem">
+            <input type="text" id="p-img" placeholder="URL Imagem">
             <select id="p-cat">
                 <option value="Pistolas">Pistolas</option>
                 <option value="Submetralhadoras">Submetralhadoras</option>
@@ -160,7 +169,7 @@
             const user = document.getElementById('login-user').value.trim().toLowerCase();
             const { data, error } = await supabaseClient.auth.signInWithPassword({ email: `${user}@loja.com`, password: document.getElementById('login-pass').value });
             showLoading(false);
-            if (error) alert("Dados inválidos."); else { currentUser = data.user; initStore(); }
+            if (error) alert("Erro: Usuário ou senha incorretos."); else { currentUser = data.user; initStore(); }
         }
 
         async function register() {
@@ -192,19 +201,19 @@
                     let html = `<div class="category-section"><h2 class="category-title">${cat}</h2><div class="product-grid">`;
                     items.forEach(p => {
                         const pista = p.price_pista || 0;
-                        const partner = p.price_partner || 0;
+                        const parc = p.price_partner || 0;
                         html += `
                             <div class="product-card">
                                 <img src="${p.image_url}">
                                 <h4>${p.name}</h4>
                                 <div class="info-prices">
                                     <div><span class="p-lab">PISTA</span><span class="p-val">$${pista}</span></div>
-                                    <div><span class="p-lab" style="color:var(--gold)">PARCERIA</span><span class="p-val" style="color:var(--gold)">$${partner}</span></div>
+                                    <div><span class="p-lab" style="color:var(--gold)">PARC.</span><span class="p-val" style="color:var(--gold)">$${parc}</span></div>
                                 </div>
-                                <button onclick="addToCart('${p.name}', ${pista}, ${partner})" style="background:#27ae60">ADICIONAR</button>
+                                <button onclick="addToCart('${p.name}', ${pista}, ${parc})" style="background:#27ae60">ADICIONAR</button>
                                 ${currentUser.user_metadata.role === 'admin' ? `
                                     <div style="display:flex; gap:5px; margin-top:8px">
-                                        <button onclick="editProduct('${p.id}','${p.name}',${pista},${partner},'${p.image_url}','${p.category}')" style="background:#f39c12; font-size:0.65em">EDITAR</button>
+                                        <button onclick="editProduct('${p.id}','${p.name}',${pista},${parc},'${p.image_url}','${p.category}')" style="background:#f39c12; font-size:0.65em">EDITAR</button>
                                         <button onclick="deleteProduct('${p.id}')" style="background:#c0392b; font-size:0.65em">EXCLUIR</button>
                                     </div>
                                 ` : ''}
@@ -216,9 +225,16 @@
             showLoading(false);
         }
 
-        function addToCart(name, pista, partner) {
+        function filterProducts() {
+            const term = document.getElementById('search-input').value.toLowerCase();
+            document.querySelectorAll('.product-card').forEach(card => {
+                card.style.display = card.querySelector('h4').innerText.toLowerCase().includes(term) ? "block" : "none";
+            });
+        }
+
+        function addToCart(name, pista, parc) {
             const item = cart.find(i => i.name === name);
-            if (item) item.qty++; else cart.push({ name, pista, partner, qty: 1 });
+            if (item) item.qty++; else cart.push({ name, pista, parc, qty: 1 });
             updateCart();
         }
 
@@ -227,7 +243,7 @@
             div.innerHTML = '';
             let total = 0;
             cart.forEach(i => {
-                total += i.pista * i.qty; // Usando preço de pista como base para o total visual
+                total += i.pista * i.qty;
                 div.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; padding:5px 0; border-bottom:1px solid #333;">
                     <span>${i.qty}x ${i.name}</span>
                     <button onclick="removeFromCart('${i.name}')" style="width:auto; background:none; color:#ff4d4d; font-weight:bold">X</button>
@@ -244,12 +260,35 @@
 
         async function checkout() {
             if (cart.length === 0) return alert("Vazio!");
+            const now = Date.now();
+            const storageKey = 'checkout_history';
+            let history = JSON.parse(localStorage.getItem(storageKey) || "[]");
+            history = history.filter(time => now - time < 1800000);
+
+            const count = history.length;
+            let waitTime = 0;
+            if (count >= 5) waitTime = 60;
+            else if (count >= 4) waitTime = 30;
+            else if (count >= 3) waitTime = 10;
+            else if (count >= 2) waitTime = 5;
+
+            if (waitTime > 0) {
+                const lastOrder = history[history.length - 1];
+                if (now - lastOrder < waitTime * 60 * 1000) {
+                    const minL = Math.ceil((waitTime * 60 * 1000 - (now - lastOrder)) / 60000);
+                    alert(`⚠️ ANTI-FLOOD\nAguarde ${minL} min.`);
+                    return;
+                }
+            }
+
             showLoading(true);
-            const list = cart.map(i => `• ${i.qty}x **${i.name}**\n  - Pista: $${i.pista*i.qty} | Parceria: $${i.partner*i.qty}`).join('\n\n');
+            history.push(now);
+            localStorage.setItem(storageKey, JSON.stringify(history));
+            const list = cart.map(i => `• ${i.qty}x **${i.name}**\n  - Pista: $${i.pista*i.qty} | Parc: $${i.parc*i.qty}`).join('\n\n');
             await fetch(DISCORD_WEBHOOK, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({
                 embeds: [{ title: "🚨 ENCOMENDA", color: 16711680, fields: [{name:"Cliente", value:currentUser.user_metadata.nome_ingame, inline:true}, {name:"Pedido", value:list}] }]
             })});
-            alert("Pedido enviado!");
+            alert("Pedido recebido! Entraremos em contato dentro da cidade.");
             cart = []; updateCart(); showLoading(false);
         }
 
@@ -278,11 +317,11 @@
             showLoading(false); toggleModal('admin-modal', false); loadProducts();
         }
 
-        function editProduct(id, name, pista, partner, img, cat) {
+        function editProduct(id, name, pista, parc, img, cat) {
             document.getElementById('edit-id').value = id;
             document.getElementById('p-name').value = name;
             document.getElementById('p-price-pista').value = pista;
-            document.getElementById('p-price-partner').value = partner;
+            document.getElementById('p-price-partner').value = parc;
             document.getElementById('p-img').value = img;
             document.getElementById('p-cat').value = cat;
             document.getElementById('admin-title').innerText = "Editar Item";
@@ -290,12 +329,6 @@
         }
 
         async function deleteProduct(id) { if(confirm("Excluir?")) { await supabaseClient.from('products').delete().eq('id', id); loadProducts(); } }
-        function filterProducts() {
-            const term = document.getElementById('search-input').value.toLowerCase();
-            document.querySelectorAll('.product-card').forEach(card => {
-                card.style.display = card.querySelector('h4').innerText.toLowerCase().includes(term) ? "block" : "none";
-            });
-        }
     </script>
 </body>
 </html>
