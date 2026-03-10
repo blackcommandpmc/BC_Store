@@ -156,7 +156,10 @@
             <div id="cart-items-box">
                 <div id="cart-items" style="max-height: 180px; overflow-y: auto;"></div>
                 <div style="padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2);">
-                    <h4 id="cart-total" style="margin: 10px 0">Itens no Pedido</h4>
+                    <div id="cart-totals-display" style="margin-bottom: 10px;">
+                        <p id="total-pista" style="margin: 2px 0; color: white;">Total Pista: $0</p>
+                        <p id="total-parceria" style="margin: 2px 0; color: var(--gold);">Total Parceria: $0</p>
+                    </div>
                     <button onclick="checkout()" style="background:#27ae60">ENVIAR ENCOMENDA</button>
                     <button class="btn-del" onclick="logout()" style="margin-top:8px">SAIR</button>
                 </div>
@@ -282,19 +285,37 @@
         function updateCart() {
             const container = document.getElementById('cart-items');
             container.innerHTML = '';
+            let totalPista = 0;
+            let totalParceria = 0;
+
             cart.forEach(i => {
+                totalPista += i.pista * i.qty;
+                totalParceria += i.parc * i.qty;
                 container.innerHTML += `
                     <div style="display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #333;">
                         <span>${i.qty}x ${i.name}</span>
                         <button style="width:auto; padding:0 10px" class="btn-del" onclick="removeFromCart('${i.name}')">X</button>
                     </div>`;
             });
+
+            // ATUALIZA OS TOTAIS NA TELA
+            document.getElementById('total-pista').innerText = `Total Pista: $${totalPista}`;
+            document.getElementById('total-parceria').innerText = `Total Parceria: $${totalParceria}`;
         }
 
         async function checkout() {
             if (cart.length === 0) return alert("Vazio!");
             showLoading(true);
-            const list = cart.map(i => `• ${i.qty}x **${i.name}**\n  - Pista: $${i.pista * i.qty}\n  - Parceria: $${i.parc * i.qty}`).join('\n\n');
+
+            let totalPista = 0;
+            let totalParceria = 0;
+
+            const list = cart.map(i => {
+                totalPista += i.pista * i.qty;
+                totalParceria += i.parc * i.qty;
+                return `• ${i.qty}x **${i.name}**\n  - Pista: $${i.pista * i.qty}\n  - Parceria: $${i.parc * i.qty}`;
+            }).join('\n\n');
+
             try {
                 await fetch(DISCORD_WEBHOOK, {
                     method: 'POST',
@@ -305,7 +326,9 @@
                             fields: [
                                 { name: "👤 Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
                                 { name: "📞 Telefone", value: currentUser.user_metadata.tel_ingame, inline: true },
-                                { name: "📦 Pedido", value: list }
+                                { name: "📦 Detalhes do Pedido", value: list },
+                                { name: "💰 TOTAL PISTA", value: `**$${totalPista}**`, inline: true },
+                                { name: "💰 TOTAL PARCERIA", value: `**$${totalParceria}**`, inline: true }
                             ],
                             timestamp: new Date()
                         }]
@@ -337,7 +360,7 @@
             document.getElementById('edit-id').value = id;
             document.getElementById('p-name').value = name;
             document.getElementById('p-price-pista').value = pista;
-            document.getElementById('p-price-partner').value = parc;
+            document.getElementById('p-price-partner').value = partner; // Note: ensure partner variable matches p.price_partner
             document.getElementById('p-img').value = img;
             document.getElementById('p-cat').value = cat;
             toggleModal('admin-modal', true);
