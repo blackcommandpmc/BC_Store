@@ -165,7 +165,13 @@
         function toggleModal(id, show) { document.getElementById(id).classList.toggle('hidden', !show); }
         function toggleCart() { document.getElementById('cart-items-box').classList.toggle('hidden'); }
 
-        async function register() {
+       async function register() {
+        // If the hidden field is filled, it's a bot
+        if (document.getElementById('reg-bot-check').value !== "") {
+        console.log("Bot detected.");
+        return; // Exit silently
+        }
+           {
             showLoading(true);
             const metadata = { nome_ingame: document.getElementById('reg-nome').value, tel_ingame: document.getElementById('reg-tel').value, role: 'customer' };
             const { error } = await supabaseClient.auth.signUp({ 
