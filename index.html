@@ -332,34 +332,66 @@
             document.getElementById('cart-total').innerText = `Total: $${total}`;
         }
 
-        async function checkout() {
-            if (cart.length === 0) return alert("Vazio!");
-            showLoading(true);
-            const list = cart.map(i => `• ${i.qty}x ${i.name} ($${i.price * i.qty})`).join('\n');
-            const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
-            try {
-                await fetch(DISCORD_WEBHOOK, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        embeds: [{
-                            title: "🚨 NOVO PEDIDO", color: 16711680,
-                            fields: [
-                                { name: "👤 Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
-                                { name: "📞 Telefone", value: currentUser.user_metadata.tel_ingame, inline: true },
-                                { name: "📦 Itens", value: list },
-                                { name: "💰 Total", value: `**$${total}**` }
-                            ],
-                            timestamp: new Date()
-                        }]
-                    })
-                });
-                alert("Enviado!"); cart = []; updateCart();
-            } catch(e) { alert("Erro ao enviar."); }
-            showLoading(false);
-        }
+async function checkout() {
+    if (cart.length === 0) return alert("Vazio!");
 
-        function logout() { location.reload(); }
+    const now = Date.now();
+    const storageKey = 'checkout_history';
+    let history = JSON.parse(localStorage.getItem(storageKey) || "[]");
+
+    // Remove registros com mais de 2 horas para manter o storage limpo
+    history = history.filter(time => now - time < 7200000);
+
+    const count = history.length;
+    let waitTime = 0;
+    let limitLabel = "";
+
+    // Lógica Progressiva
+    if (count >= 5) { 
+        waitTime = 60; // 1 hora
+        limitLabel = "5 (Limite Máximo)";
+    } else if (count >= 4) { 
+        waitTime = 30; 
+        limitLabel = "4";
+    } else if (count >= 3) { 
+        waitTime = 10; 
+        limitLabel = "3";
+    } else if (count >= 2) { 
+        waitTime = 5; 
+        limitLabel = "2";
+    }
+
+    if (waitTime > 0) {
+        const lastOrder = history[history.length - 1];
+        const msPassed = now - lastOrder;
+        const msWait = waitTime * 60 * 1000;
+
+        if (msPassed < msWait) {
+            const minutesLeft = Math.ceil((msWait - msPassed) / 60000);
+            alert(`⚠️ SISTEMA ANTI-FLOOD\n\nVocê já realizou ${count} pedidos recentemente.\nO tempo de espera aumenta a cada tentativa para evitar spam.\n\nTempo de espera atual: ${waitTime} min\nAguarde mais ${minutesLeft} minuto(s) para pedir novamente.`);
+            return;
+        }
+    }
+
+    // Se passou no teste, prossegue
+    showLoading(true);
+    const list = cart.map(i => `• ${i.qty}x ${i.name} ($${i.price * i.qty})`).join('\n');
+    const total = cart.reduce((acc, i) => acc + (i.price * i.qty), 0);
+
+    try {
+        const response = await fetch(DISCORD_WEBHOOK, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                embeds: [{
+                    title: "🚨 NOVO PEDIDO",
+                    color: 16711680,
+                    fields: [
+                        { name: "👤 Cliente", value: currentUser.user_metadata.nome_ingame, inline: true },
+                        { name: "📞 Telefone", value: currentUser.user_metadata.tel_ingame, inline: true },
+                        { name: "📦 Itens", value: list },
+                        { name: "💰 Total", value: `**$${total}
+
     </script>
 </body>
 </html>
